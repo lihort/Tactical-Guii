@@ -1,0 +1,3495 @@
+local library = loadstring(game:HttpGet("https://dogix.wtf/scripts/libraries/zypher-ui-lib.lua"))()
+ 
+local main = library:CreateMain({
+    projName = "UILib",
+    Resizable = false,
+    MinSize = UDim2.new(0,400,0,400),
+    MaxSize = UDim2.new(0,750,0,500),
+})
+ 
+function notify(title, text, duration)
+    game.StarterGui:SetCore("SendNotification", {
+        Title = title; -- the title (ofc)
+        Text = text; -- what the text says (ofc)
+        Duration = duration; -- how long the notification should in secounds
+    })
+end
+
+
+
+-- Categorys
+local CreditsCategory = main:CreateCategory("Credits")
+ 
+local PlayerCategory = main:CreateCategory("Player")
+ 
+local BaseToolsCategory = main:CreateCategory("Base Tools")
+ 
+local TeleportCategory = main:CreateCategory("WayPoints")
+ 
+local ModCategory = main:CreateCategory("Mods")
+ 
+local DupeCategory = main:CreateCategory("Dupe")
+ 
+local Misc = main:CreateCategory("Misc")
+
+local v = main:CreateCategory("")
+
+local Blank = main:CreateCategory("")
+ 
+local Blank = main:CreateCategory("")
+ 
+local Blank = main:CreateCategory("")
+ 
+local SettingsCategory = main:CreateCategory("Settings")
+ 
+-- Player Sectors
+ 
+local MainScripter = CreditsCategory:CreateSection("Main Scripter - YoItsTactic#8977")
+ 
+local UILibaryDesigner = CreditsCategory:CreateSection("UI Libary Designer - xTheAlex14#3200")
+ 
+local Help = CreditsCategory:CreateSection("Helpers - Ancestor#6969, CynMod#7113, Cipher#0001")
+
+local Settings = SettingsCategory:CreateSection("Settings")
+ 
+local ChatTool = SettingsCategory:CreateSection("Chat Settings")
+
+local Languages = SettingsCategory:CreateSection("UI Libaries")
+ 
+local MiscTP = TeleportCategory:CreateSection("PlayerTP")
+ 
+local Speed = PlayerCategory:CreateSection("Humanoid")
+ 
+local ModMap = ModCategory:CreateSection("Mods")
+
+local Tps = TeleportCategory:CreateSection("Teleports")
+
+local BaseTool = BaseToolsCategory:CreateSection("Base Tools")
+ 
+local AutoBase = BaseToolsCategory:CreateSection("Auto Build")
+ 
+local AxeTools = DupeCategory:CreateSection("Axe Tools")
+
+local Misc = Misc:CreateSection("Axe Tools") 
+
+Settings:Create("Button", "Destroy Gui", function()
+game.CoreGui:FindFirstChild("UILib"):Destroy()
+end, {animated = true,})
+
+Settings:Create("Button", "Rejoin Game", function()
+game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer)
+end, {animated = true,})
+
+Settings:Create("Button", "Exit Game", function()
+game:shutdown()
+end, {animated = true,})
+
+--Humanoid
+ 
+Speed:Create("Slider", "Walk Speed", function(Value)
+_G.speed = Value
+ 
+game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = _G.speed
+game.Players.LocalPlayer.Character.Humanoid:GetPropertyChangedSignal'WalkSpeed':Connect(function()
+game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = _G.speed
+end)
+ 
+end, {min = 16 ,default = 50, max = 600, suffix = " Speed", precise = false})
+ 
+Speed:Create("Slider", "JumpPower", function(Value)
+game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = Value
+end, {min = 50,default = 50, max = 300, suffix = " Power", precise = false})
+ 
+Speed:Create("Slider", "Hip Height", function(Value)
+game:GetService("Players").LocalPlayer.Character.Humanoid.HipHeight = Value
+end, {min = 0, default = 0,max = 300, suffix = " Hieght", precise = true})
+ 
+ 
+Speed:Create("Slider", "Gravity", function(Value)
+game.Workspace.Gravity = Value
+end, {min = 0, max = 196.2, suffix = " Gravity", precise = false,default = 196.2})
+ 
+_G.jumpinf = false
+Speed:Create("Toggle", "Infinite Jump", function(State)
+_G.jumpinf = State
+end)
+
+local noclipping
+
+         function toggleNoClip()
+            local disableCollide 
+            disableCollide = game:GetService("RunService").Stepped:connect(function()
+            for i,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+               if noclipping == false then
+                  disableCollide:Disconnect()
+                  return
+               end
+               if v:IsA("BasePart") then
+                  v.CanCollide = false
+               end
+            end
+            end)
+         end
+
+--try now
+Speed:Create("Toggle", "NoClip", function(Value)
+
+   noclipping = Value
+    if noclipping == true then
+toggleNoClip()
+    end --;)
+end)
+ 
+game:GetService("UserInputService").JumpRequest:connect(function()
+if _G.jumpinf then
+game:GetService"Players".LocalPlayer.Character:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
+end
+end)
+ 
+ModMap:Create("Toggle", "WaterWalk", function(Value)
+ 
+ Workspace.Water.Water.CanCollide = Value
+ 
+end)
+ 
+ ModMap:Create("Toggle", "Remove (Water)", function(State)
+  for _,v in pairs(game.Workspace.Water:GetChildren()) do
+    if v.Name == "Water" then
+      if State then
+        v.Transparency = 1;
+      else
+        v.Transparency = 0;
+      end
+    end
+  end
+  end)
+ 
+  ModMap:Create("Toggle", "Remove (Lava)", function(State)
+  for i,v in pairs(game.Workspace.Region_Volcano:GetDescendants()) do
+    if v.Name == "TouchInterest" then
+      v:Destroy()
+    elseif v.Name == "Lava" then
+      for n,k in pairs(v:GetChildren()) do
+        if k:IsA("Part") then
+          if State == true then
+            k.Transparency = 1
+          else
+            k.Transparency = 0
+          end
+        end
+      end
+    end
+  end
+  end)
+ 
+ModMap:Create("Toggle", "Remove Fog", function(Value)
+_G.Checkbox = (Value) == true --or fasle
+                while _G.Checkbox do
+                game: service"RunService".RenderStepped:wait()
+                game.Lighting.FogEnd = 9999
+                end
+  end)
+ 
+ModMap:Create("Toggle", "Always Day", function(Value)
+  game.Lighting.TimeOfDay = "12:00:00"
+  game.Lighting.Brightness = 1
+  _G.d = Value;
+  end)
+ 
+ModMap:Create("Toggle", "Always Night", function(Value)
+  game.Lighting.TimeOfDay = "24:00:00"
+  game.Lighting.Brightness = 0
+  _G.n = Value;
+  end)
+ 
+ModMap:Create( 
+    "Slider", 
+    "Brightness",
+    function(Value)
+ game:GetService("Lighting").Brightness = Value/10
+    end,
+    {
+        min = 0,
+        max = 1000,
+        -- Optional
+        default = 0,
+        precise = false, -- ex: 0.1, 0.2, 0.3
+        changablevalue = true
+    }
+)
+ 
+ModMap:Create("Button", "Remove (Lava Boulders)", function()
+            local destroy = true
+ 
+    local boulders = workspace.Region_Volcano:FindFirstChild("PartSpawner")
+ 
+    while destroy == true do
+        for i, v in pairs(boulders:GetChildren()) do
+            v:Destroy()
+        end
+        wait(2)
+    end
+    end,
+    {animated = true,})
+ 
+ 
+ 
+    ModMap:Create("Button", "Remove (ShrineDoors)", function()
+ workspace.Region_Mountainside.BoulderRegen.Boulder:Destroy()
+    workspace.Region_Mountainside.Door.Door:Destroy()
+    end,
+    {animated = true,})
+ 
+    ModMap:Create("Button", "Remove (Snow Area Boulders)", function()
+    local boulders = workspace.Region_Snow:FindFirstChild("PartSpawner")
+ 
+            for i, v in pairs(boulders:GetChildren()) do
+            v:Destroy()
+        end
+    end,
+    {animated = true,})
+    
+    local Players = {}
+local plrs = game:GetService("Players")
+ 
+for _, v in next, plrs:GetChildren() do
+    table.insert(Players, v.Name)
+end
+ 
+plrs.PlayerRemoving:Connect(function(value)
+    for i, v in next, Players do
+        if v == value.Name then
+            table.remove(Players, i)
+        end
+    end
+end)
+ 
+plrs.PlayerAdded:Connect(function(value)
+    table.insert(Players, value.Name)
+end)
+ 
+Misc:Create("Dropdown", "Target", function(Option)
+Game_Player = Option
+end, {
+    options = Players,
+    default = Players[1]
+})
+
+ 
+    function _G.Teleport1(XP,YP,ZP)
+-- Config How Many Blocks It Will Tp You Untill The Final Destination:
+local XTpEvery = 20
+local YTpEvery = 20
+local ZTpEvery = 20
+--Time to Tp Every:
+local Timer = 0.010
+--Script:
+local pos = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+if pos.Position.X < XP then
+for x = pos.Position.X,XP,XTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(x,pos.Position.Y,pos.Position.Z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+else
+for x = pos.Position.X,XP,-XTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(x,pos.Position.Y,pos.Position.Z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+end
+if pos.Position.Z < ZP then
+for z = pos.Position.Z,ZP,ZTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(pos.Position.X,pos.Position.Y,z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+else
+for z = pos.Position.Z,ZP,-ZTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(pos.Position.X,pos.Position.Y,z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+end
+if pos.Position.Y < YP then
+for High = pos.Position.Y,YP,YTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(pos.Position.X ,High ,pos.Position.Z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+else
+for High = pos.Position.Y,YP,-YTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(pos.Position.X ,High ,pos.Position.Z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+end
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(XP,YP,ZP))
+end
+ 
+function  _G.Teleport2(cf)
+    game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame = cf
+    local BV = Instance.new("BodyVelocity")
+    BV.Parent = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    BV.MaxForce = Vector3.new(9999999999999999999999999999999999999999999, 9999999999999999999999999999999999999999999, 9999999999999999999999999999999999999999999)
+    BV.Velocity = Vector3.new(0, 100, 0)
+    wait(0.1)
+    BV.Velocity = Vector3.new(0, 10, 0)
+    wait(0.05)
+    if BV then
+        BV:Destroy()
+    end 
+end
+ 
+ 
+function _G.Teleport(cf)
+    local plrc = game:service'Players'.LocalPlayer.Character
+    plrc.Humanoid:ChangeState(5)
+    local f = Instance.new("BodyPosition", plrc.Torso)
+    f.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+    f.Position = Vector3.new(0, 500000, 0)
+    wait(.12)
+    f:Destroy()
+    wait()
+    plrc.HumanoidRootPart.CFrame = cf
+    plrc.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
+    plrc.HumanoidRootPart.RotVelocity = Vector3.new(0,0,0)
+    plrc.Humanoid:ChangeState(8)
+end
+ 
+ local Players = {}
+local plrs = game:GetService("Players")
+ 
+for _, v in next, plrs:GetChildren() do
+    table.insert(Players, v.Name)
+end
+ 
+plrs.PlayerRemoving:Connect(function(value)
+    for i, v in next, Players do
+        if v == value.Name then
+            table.remove(Players, i)
+        end
+    end
+end)
+ 
+plrs.PlayerAdded:Connect(function(value)
+    table.insert(Players, value.Name)
+end)
+ 
+MiscTP:Create("Dropdown", "Target", function(Option)
+_G.SelectedPlayer = Option
+end, {
+    options = Players,
+    default = Players[1]
+})
+ 
+MiscTP:Create("Button", "Teleport To Bases", function()
+local Base
+for i, v in pairs(game.Workspace.Properties:GetChildren()) do
+    if  v.Owner.Value ~= nil and v.Owner.Value == game.Players[_G.SelectedPlayer] then
+        Base = v.OriginSquare.CFrame + Vector3.new(0,5,0)
+    end
+end
+ 
+_G.Teleport(CFrame.new(Base.X, Base.Y, Base.Z))
+ 
+end, {animated = true,})
+ 
+MiscTP:Create("Button", "Teleport To Player", function()
+local Plr
+Plr = game.Players[_G.SelectedPlayer].Character.HumanoidRootPart.CFrame
+if Plr ~= nil then
+_G.Teleport(CFrame.new(Plr.X, Plr.Y, Plr.Z))
+end
+end, {animated = true,})
+ 
+BaseTool:Create("Button", "Freeland", function()
+for a,b in pairs(workspace.Properties:GetChildren()) do 
+    if b:FindFirstChild("Owner") and b:FindFirstChild("OriginSquare") and b.Owner.Value == nil then 
+        game.ReplicatedStorage.PropertyPurchasing.ClientPurchasedProperty:FireServer(b, b.OriginSquare.OriginCFrame.Value.p + Vector3.new(0,3,0))
+ wait(0.5)
+        Instance.new('RemoteEvent', game:service'ReplicatedStorage'.Interaction).Name = "Ban"
+    for i,v in pairs(game.Workspace.Properties:GetChildren()) do
+        if v.Owner.Value == game.Players.LocalPlayer then
+    game.Players.LocalPlayer.Character.Humanoid.Jump = true
+    wait(0.1)
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.OriginSquare.CFrame + Vector3.new(0,10,0)
+    game.Players.LocalPlayer.Character.Humanoid.Jump = true
+    wait(0.1)
+        end
+    end
+ 
+  --     game.Players.LocalPlayer.Character:MoveTo(b.OriginSquare.Position)
+        break
+    end
+end
+
+end, {animated = true,})
+ 
+BaseTool:Create("Button", "Maxland", function()
+for i, v in pairs(game:GetService("Workspace").Properties:GetChildren()) do
+        if v:FindFirstChild("Owner") and v.Owner.Value == game.Players.LocalPlayer then
+            base = v
+            square = v.OriginSquare
+            end
+        end
+    function makebase(pos)
+        local Event = game:GetService("ReplicatedStorage").PropertyPurchasing.ClientExpandedProperty
+        Event:FireServer(base, pos)
+        end
+    spos = square.Position
+    makebase(CFrame.new(spos.X + 40, spos.Y, spos.Z))
+    makebase(CFrame.new(spos.X - 40, spos.Y, spos.Z))
+    makebase(CFrame.new(spos.X, spos.Y, spos.Z + 40))
+    makebase(CFrame.new(spos.X, spos.Y, spos.Z - 40))
+    makebase(CFrame.new(spos.X + 40, spos.Y, spos.Z + 40))
+    makebase(CFrame.new(spos.X + 40, spos.Y, spos.Z - 40))
+    makebase(CFrame.new(spos.X - 40, spos.Y, spos.Z + 40))
+    makebase(CFrame.new(spos.X - 40, spos.Y, spos.Z - 40))
+    makebase(CFrame.new(spos.X + 80, spos.Y, spos.Z))
+    makebase(CFrame.new(spos.X - 80, spos.Y, spos.Z))
+    makebase(CFrame.new(spos.X, spos.Y, spos.Z + 80))
+    makebase(CFrame.new(spos.X, spos.Y, spos.Z - 80))
+--Corners--
+    makebase(CFrame.new(spos.X + 80, spos.Y, spos.Z + 80))
+    makebase(CFrame.new(spos.X + 80, spos.Y, spos.Z - 80))
+    makebase(CFrame.new(spos.X - 80, spos.Y, spos.Z + 80))
+    makebase(CFrame.new(spos.X - 80, spos.Y, spos.Z - 80))
+--Corners--
+    makebase(CFrame.new(spos.X + 40, spos.Y, spos.Z + 80))
+    makebase(CFrame.new(spos.X - 40, spos.Y, spos.Z + 80))
+    makebase(CFrame.new(spos.X + 80, spos.Y, spos.Z + 40))
+    makebase(CFrame.new(spos.X + 80, spos.Y, spos.Z - 40))
+    makebase(CFrame.new(spos.X - 80, spos.Y, spos.Z + 40))
+    makebase(CFrame.new(spos.X - 80, spos.Y, spos.Z - 40))
+    makebase(CFrame.new(spos.X + 40, spos.Y, spos.Z - 80))
+    makebase(CFrame.new(spos.X - 40, spos.Y, spos.Z - 80))
+
+end, {animated = true,})
+ 
+BaseTool:Create("Button", "Blue Prints", function()
+for i,v in pairs(game.ReplicatedStorage.Purchasables.Structures.BlueprintStructures:GetChildren()) do
+if not game.Players.LocalPlayer.PlayerBlueprints.Blueprints:FindFirstChild(v.Name) then
+local clone = v:Clone()
+clone.Parent = game.Players.LocalPlayer.PlayerBlueprints.Blueprints
+end
+end
+
+end, {animated = true,})
+ 
+  Settings:Create("Slider", "Max Zoom Distance", function(Value)
+  game.Players.LocalPlayer.CameraMaxZoomDistance = Value
+ 
+ 
+end, {min = 60, max = 10000, suffix = "Zoom", precise = false,default = 60})
+ 
+
+ 
+local TEHEHHEHEHE = {}
+
+function DupeAxes()
+    GetLastPos()
+    if game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool") then
+        game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool").Parent = game.Players.LocalPlayer.Backpack
+    end
+    Head = game.Players.LocalPlayer.Character.Head.CFrame
+    for i, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+        if v:IsA("Part") then
+            v:Destroy()
+        end
+    end
+    wait()
+    for i, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+        if v:IsA("Tool") then
+            game.ReplicatedStorage.Interaction.ClientInteracted:FireServer(v, "Drop tool", Head)
+      TEHEHHEHEHE[#TEHEHHEHEHE] = v
+        end
+    end
+    wait(6.3)
+    Tp_1(CFrame.new(Pos))
+  
+  for i, v in pairs(TEHEHHEHEHE) do
+   game.ReplicatedStorage.Interaction.ClientInteracted:FireServer(v, "Pick up tool")
+  end
+  
+  
+end
+
+AxeTools:Create("Button", "Dupe Axes", function()
+DupeAxes()
+    end, {animated = true,})
+ 
+ AxeTools:Create("Button", "Save Axes", function()
+    Amount = 0
+    for a,b in pairs(game.Players.LocalPlayer.Backpack:GetChildren())do
+        if b.Name ~= "BlueprintTool" and b.Name == "Tool" then
+            b.Parent = game.Players.LocalPlayer
+            Amount = Amount + 1
+        end
+    end
+
+ 
+end, {animated = true,})
+ 
+AxeTools:Create("Button", "Restore Axes", function()
+    Amount = 0
+    for a,b in pairs(game.Players.LocalPlayer:GetChildren()) do
+        if b.Name ~= "BlueprintTool" and b.Name == "Tool" then
+            b.Parent = game.Players.LocalPlayer.Backpack
+            Amount = Amount + 1
+        end
+    end
+
+ 
+end, {animated = true,})
+ 
+AxeTools:Create("Button", "Drop Axes", function()
+    Amount = 0
+    for a,b in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+        if b.Name ~= "BlueprintTool" and b.Name == "Tool" then
+            game.ReplicatedStorage.Interaction.ClientInteracted:FireServer(b, "Drop tool", game.Players.LocalPlayer.Character.Head.CFrame)
+            Amount = Amount + 1
+        end
+    end
+
+end, {animated = true,})
+
+ 
+
+ 
+    AxeTools:Create("Button", "Solo Dupe", function()
+    
+    local Manager = game:GetService("VirtualInputManager")
+
+    game.ReplicatedStorage.Interaction.ClientSetListPlayer:InvokeServer(game:GetService'Players'.LocalPlayer.WhitelistFolder, game.Players.LocalPlayer, true)
+    
+    local Player = game.Players.LocalPlayer
+    
+        local LoadSlot = game.ReplicatedStorage.LoadSaveRequests.ClientMayLoad:InvokeServer(Player)
+         if LoadSlot then
+            game.ReplicatedStorage.LoadSaveRequests.RequestLoad:InvokeServer(game.Players.LocalPlayer.CurrentSaveSlot.Value, Player)
+            game.ReplicatedStorage.Interaction.ClientSetListPlayer:InvokeServer(game:GetService'Players'.LocalPlayer.WhitelistFolder, game.Players.LocalPlayer, false)
+            game:GetService("Players").LocalPlayer.PlayerGui.Chat.Frame.Visible = false
+repeat
+    wait(0.1)
+until game:GetService("Players").LocalPlayer.PlayerGui.PropertyPurchasingGUI.SelectPurchase.Visible == true
+wait(.2)
+Manager:SendKeyEvent(true,"E",false,game)
+repeat
+    wait(0.1)
+until game:GetService("Players").LocalPlayer.PlayerGui.PropertyPurchasingGUI.ConfirmPurchase.Visible == true
+wait(1.2)
+Manager:SendKeyEvent(true,"E",false,game)
+wait(2.5)
+game:GetService("Players").LocalPlayer.PlayerGui.Chat.Frame.Visible = true
+         else
+            print("Load Is On a Cooldown")
+         end
+    
+    end, {animated = true,})
+
+Tps:Create(
+    "DropDown",
+    "Shops", 
+    function(current)
+ 
+if current == "Wood R Us" then
+_G.Teleport(CFrame.new(268.4, 3.2, 52.1))
+end
+ 
+if current == "Fancy Furnishings" then
+_G.Teleport(CFrame.new(491, 13, -1720))
+end
+ 
+if current == "Links Logic" then
+_G.Teleport(CFrame.new(4607, 9, -798))
+end
+ 
+if current == "Car Shop" then
+_G.Teleport(CFrame.new(508.5, 3.2, -1462.7))
+end
+ 
+if current == "Fine Arts Shop" then
+_G.Teleport(CFrame.new(5207, -156, 719))
+end
+ 
+if current == "Bobs Shack" then
+_G.Teleport(CFrame.new(260, 10, -2542))
+end
+ 
+ 
+ 
+    end,
+    {
+        options = {
+            "Wood R Us",
+            "Fancy Furnishings",
+            "Links Logic",
+            "Car Shop",
+            "Fine Arts Shop",
+            "Bobs Shack"
+        },
+         -- Optional
+        default = "Shops",
+        search = false
+    }
+)
+ 
+Tps:Create(
+    "DropDown",
+    "Wood Areas", 
+    function(current)
+ 
+if current == "Palm Area" then
+_G.Teleport(CFrame.new(2549, -5, -42))
+end
+ 
+if current == "Swamp Area" then
+_G.Teleport(CFrame.new(-1209, 132, -801))
+end
+ 
+if current == "Volcano Area" then
+_G.Teleport(CFrame.new(-1585, 622, 1140))
+end
+ 
+if current == "Frost Area" then
+_G.Teleport(CFrame.new(1448.3, 413, 3185.2))
+end
+ 
+if current == "SnowGlow Area" then
+_G.Teleport(CFrame.new(-1105.9, -6, -894))
+end
+ 
+if current == "Koa Area" then
+_G.Teleport(CFrame.new(5022.4, 6.1, -503.1))
+end
+ 
+if current == "CaveCrawler Area" then
+_G.Teleport(CFrame.new(3488.1, -199.8, 519.1))
+end
+ 
+if current == "Pine & Fir Area" then
+_G.Teleport(CFrame.new(1284.9, 59.8, 2136.1))
+end
+ 
+if current == "Walnut Area" then
+_G.Teleport(CFrame.new(-282.3, 8, -1555.8))
+end
+ 
+if current == "Birch Area" then
+_G.Teleport(CFrame.new(-395.5, 244.8, 1275.4))
+end
+ 
+if current == "Cherry Area" then
+_G.Teleport(CFrame.new(220.9, 59.8, 1305.8))
+end
+ 
+    end,
+    {
+        options = {
+            "Palm Area",
+            "Swamp Area",
+            "Volcano Area",
+            "Frost Area",
+            "SnowGlow Area",
+            "Koa Area",
+            "CaveCrawler Area",
+            "Pine & Fir Area",
+            "Walnut Area",
+            "Birch Area",
+            "Cherry Area"
+        },
+         -- Optional
+        default = "Wood Areas",
+        search = false
+    }
+)
+ 
+Tps:Create(
+    "DropDown",
+    "Land Marks", 
+    function(current)
+ 
+if current == "The Den" then
+_G.Teleport(CFrame.new(323, 49, 1930))
+end
+ 
+if current == "Shrine Of Sight" then
+_G.Teleport(CFrame.new(-1600, 205, 919))
+end
+ 
+if current == "Ski Lodge" then
+_G.Teleport(CFrame.new(1244, 66, 2306))
+end
+ 
+if current == "Dock" then
+_G.Teleport(CFrame.new(1114, 3.2, -197))
+end
+ 
+if current == "Bridge" then
+_G.Teleport(CFrame.new(113, 15, -977))
+end
+ 
+if current == "Stranger" then
+_G.Teleport(CFrame.new(1061, 20, 1131))
+end
+ 
+if current == "Green Box" then
+_G.Teleport(CFrame.new(-1675, 358, 1476))
+end
+ 
+if current == "Light House" then
+_G.Teleport(CFrame.new(1464.8, 356.3, 3257.2))
+end
+ 
+    end,
+    {
+        options = {
+            "The Den",
+            "Shrine Of Sight",
+            "Ski Lodge",
+            "Dock",
+            "Stranger",
+            "Green Box",
+            "Light House",
+        },
+         -- Optional
+        default = "Land Marks",
+        search = false
+    }
+)
+ 
+
+ 
+ local Players = {}
+local plrs = game:GetService("Players")
+ 
+for _, v in next, plrs:GetChildren() do
+    table.insert(Players, v.Name)
+end
+ 
+plrs.PlayerRemoving:Connect(function(value)
+    for i, v in next, Players do
+        if v == value.Name then
+            table.remove(Players, i)
+        end
+    end
+end)
+ 
+plrs.PlayerAdded:Connect(function(value)
+    table.insert(Players, value.Name)
+end)
+ 
+AutoBase:Create("Dropdown", "Target", function(Option)
+_G.SelectedPlayer = Option
+end, {
+    options = Players,
+    default = Players[1]
+})
+ 
+AutoBase:Create("Button", "Advanced Wall", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Advanced%20Wall%204%20Tall"))()
+ 
+end, {animated = true,})
+ 
+AutoBase:Create("Button", "Big Castle", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Big%20Castle"))()
+ 
+end, {animated = true,})
+
+AutoBase:Create("Button", "Bob's Shack", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Bobs%20Shack"))()
+ 
+end, {animated = true,})
+
+AutoBase:Create("Button", "Dome", function()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Dome"))()
+
+end, {animated = true,})
+
+AutoBase:Create("Button", "Ferrari", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Ferrari"))()
+ 
+end, {animated = true,})
+
+ 
+AutoBase:Create("Button", "Ferry", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Ferry"))()
+ 
+end, {animated = true,})
+
+AutoBase:Create("Button", "FlatStar", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Flat%20Star"))()
+ 
+end, {animated = true,})
+
+AutoBase:Create("Button", "Floor", function()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Floor"))()
+
+end, {animated = true,})
+
+AutoBase:Create("Button", "Hanger", function()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Hanger"))()
+
+end, {animated = true,})
+
+AutoBase:Create("Button", "Maze Castle", function()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/MazeCastle"))()
+
+end, {animated = true,})
+
+AutoBase:Create("Button", "Pig", function()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Pig"))()
+
+end, {animated = true,})
+
+AutoBase:Create("Button", "Plane", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Plane"))()
+ 
+end, {animated = true,})
+
+AutoBase:Create("Button", "Present", function()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Present"))()
+
+end, {animated = true,})
+ 
+AutoBase:Create("Button", "Pyramid", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Pyramid"))()
+ 
+end, {animated = true,})
+
+AutoBase:Create("Button", "Rock Wall", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Rock%20Wall"))()
+ 
+end, {animated = true,})
+
+--Me ethier
+Tps:Create("Button", "Click Tp Tool", function()
+    local tool = Instance.new("Tool")
+    tool.Name = "Tp Tool"
+    tool.RequiresHandle = false
+    tool.CanBeDropped = false
+    tool.Parent = game.Players.LocalPlayer.Backpack
+    tool.Equipped:Connect(function(mouse)
+    mouse.Button1Down:connect(function()
+    if mouse.Target and mouse.Target.Parent then
+        Tp_1(CFrame.new(mouse.Hit.Position.X, mouse.Hit.Position.Y + 3.2, mouse.Hit.Position.Z))
+    end
+    end)
+    end)
+end, {animated = true,})
+ 
+ 
+BaseTool:Create("Button", "GreyWood", function()
+local Player = "LocalPlayer"
+
+local Remote = game.ReplicatedStorage.PlaceStructure.ClientPlacedStructure
+local Plr = game:GetService("Players").LocalPlayer
+local Check = true
+
+local BpRecive = { [1] = "Wall2Tall", [2] = "Door1", [3] = "Floor2", [4] = "Floor1Small", [5] = "Post", [6] = "Wedge10", [7] = "Wall3Tall", [8] = "Wall1Tall", [9] = "Wall1", [10] = "Wall1Short", [11] = "Wall2", [12] = "Wall2Short", [13] = "Wall1TallCorner", [14] = "Wall1Corner", [15] = "Wall1ShortCorner", [16] = "Wall1Thin", [17] = "Wall1TallThin", [18] = "Wall1ShortThin", [19] = "Wall2TallThin", [20] = "Wall2Thin", [21] = "Wall2ShortThin", [22] = "Wall2TallCorner", [23] = "Wall2Corner", [24] = "Wall2ShortCorner", [25] = "Wall3Thin", [26] = "Wall3TallThin", [27] = "Wall3Corner", [28] = "Wall3TallCorner", [29] = "Floor1Large", [30] = "Floor1", [31] = "Floor2Large", [32] = "Floor2Small", [33] = "Stair1", [34] = "Stair2", [35] = "Wedge1_Thin", [36] = "Wedge9_Thin", [37] = "Wedge4_Thin", [38] = "Wedge7_Thin", [39] = "Chair1", [40] = "Table1", [41] = "Table2", [42] = "Ladder1", [43] = "Cabinet1Thin", [44] = "Cabinet1", [45] = "Cabinet1CornerTight", [46] = "Cabinet1CornerWide", [47] = "CounterTop1Thin", [48] = "CounterTop1", [49] = "CounterTop1Sink", [50] = "Floor2Tiny", [51] = "Floor1Tiny", [52] = "Wedge1", [53] = "Wedge2", [54] = "Wedge3", [55] = "Wedge4", [56] = "Wedge8", [57] = "Wedge7", [58] = "Wedge6", [59] = "Wedge2_Thin", [60] = "Wedge3_Thin", [61] = "Wedge10_Thin", [62] = "Wedge9", [63] = "Wedge6_Thin", [64] = "Wedge8_Thin", [65] = "Wedge5", [66] = "Wedge5_Thin", [67] = "Wall3", [68] = "Door2", [69] = "Door3" }
+
+local function Gray()
+    local ItsCFrame
+    local Remote = game.ReplicatedStorage.PlaceStructure.ClientPlacedStructure
+    for i,v in pairs(game.Workspace.PlayerModels:GetChildren()) do
+        if v:FindFirstChild("Owner") and v.Owner.Value == game.Players[Player] then
+            if v:FindFirstChild("Type") and v.Type.Value == "Blueprint" then
+                if v ~= nil then
+                    Remote:FireServer(v.ItemName.Value, v.PrimaryPart.CFrame, game.Players.LocalPlayer, nil, v, true)
+                end
+            end
+        end
+    end
+end
+
+game.Workspace.PlayerModels.ChildAdded:connect(function(v)
+    if v:WaitForChild("Owner", 5) and v:WaitForChild("ItemName", 5) and Check then
+        Remote:FireServer(v.ItemName.Value, v.PrimaryPart.CFrame, game.Players.LocalPlayer, nil, v, true)
+    end
+end)
+
+local Base
+for i, v in pairs(game.Workspace.Properties:GetChildren()) do
+    if v.Owner.Value == game.Players[Player] then
+        Base = v.OriginSquare.CFrame
+    end
+end
+
+local Count = 0
+local Gr = 0
+function Sbp(A_1, A_2, A_3, A_4, A_5, A_6, A_7)
+    game.ReplicatedStorage.PlaceStructure.ClientPlacedBlueprint:FireServer(BpRecive[A_1], Base* CFrame.Angles(A_2, A_3, A_4) + Vector3.new(A_5, A_6, A_7), Plr)
+    wait()
+    if Count > 16 then Count = 0 wait(0.1) else Count = Count + 1 end
+    if Gr > 50 then Gr = 0 Gray() else Gr = Gr + 1 end
+end
+
+end, {animated = true,})
+ 
+BaseTool:Create("Button", "Clear Entire Base", function()
+for i,v in pairs(game.Workspace.PlayerModels:GetChildren()) do
+if v:FindFirstChild("Owner") and v:FindFirstChild("Type") and v.Owner.Value == game.Players.LocalPlayer then
+local A_1 = v
+local Event = game:GetService("ReplicatedStorage").Interaction.DestroyStructure
+Event:FireServer(A_1)
+end
+end
+end, {animated = true,})
+
+BaseTool:Create("Button", "Clear Structures", function()
+for i,v in pairs(game.Workspace.PlayerModels:GetChildren()) do
+if v:FindFirstChild("Owner") and v:FindFirstChild("Type") and v.Owner.Value == game.Players.LocalPlayer then
+    if v.Type.Value == "Structure" or v.Type.Value == "Furniture" then
+local A_1 = v
+local Event = game:GetService("ReplicatedStorage").Interaction.DestroyStructure
+Event:FireServer(A_1)
+end
+end
+end
+end, {animated = true,})
+
+-- Kick
+
+function Tp_1(CFrame)
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame
+end
+
+function GetLastPos()
+    Pos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+end
+
+function AxeKick(player)
+        GetLastPos() 
+        local plr = game.Players.LocalPlayer
+        local char = plr.Character
+        local plr2 = game.Players[Game_Player]
+        local char2 = plr2.Character
+        
+        local Tehe = char.Humanoid
+        Instance.new("Humanoid").Parent = char
+        Tehe:Destroy()
+        
+        local Tool = char:FindFirstChild("Tool") or plr.Backpack:FindFirstChild("Tool")
+        Tool.Parent = char
+        if Tool:FindFirstChild("Owner") then
+            Tool.Owner:Destroy()
+        end
+        
+        Tp_1(char2.HumanoidRootPart.CFrame)
+        wait(0.1)
+        repeat
+            game:GetService("RunService").Stepped:Wait()
+            char.HumanoidRootPart.CFrame = plr2.Character.HumanoidRootPart.CFrame
+        until Tool.Parent == char2
+        wait(6.4)
+        Tp_1(CFrame.new(Pos))
+end
+
+
+Misc:Create(
+    "Button",
+    "Kick",
+    function()
+AxeKick(Game_Player)
+    end,
+    {
+        animated = true,
+    }
+)
+
+ChatTool:Create("Button", "Chat Spy", function()
+enabled = true
+spyOnMyself = false
+public = false
+publicItalics = true
+privateProperties = {
+    Color = Color3.fromRGB(0,255,255); 
+    Font = Enum.Font.SourceSansBold;
+    TextSize = 18;
+}
+--////////////////////////////////////////////////////////////////
+local StarterGui = game:GetService("StarterGui")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local saymsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("SayMessageRequest")
+local getmsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("OnMessageDoneFiltering")
+local instance = (_G.chatSpyInstance or 0) + 1
+_G.chatSpyInstance = instance
+
+local function onChatted(p,msg)
+    if _G.chatSpyInstance == instance then
+        if p==player and msg:lower():sub(1,4)=="/spy" then
+            enabled = not enabled
+            wait(0.3)
+            privateProperties.Text = "{SPY "..(enabled and "EN" or "DIS").."ABLED}"
+            StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+        elseif enabled and (spyOnMyself==true or p~=player) then
+            msg = msg:gsub("[\n\r]",''):gsub("\t",' '):gsub("[ ]+",' ')
+            local hidden = true
+            local conn = getmsg.OnClientEvent:Connect(function(packet,channel)
+                if packet.SpeakerUserId==p.UserId and packet.Message==msg:sub(#msg-#packet.Message+1) and (channel=="All" or (channel=="Team" and public==false and Players[packet.FromSpeaker].Team==player.Team)) then
+                    hidden = false
+                end
+            end)
+            wait(1)
+            conn:Disconnect()
+            if hidden and enabled then
+                if public then
+                    saymsg:FireServer((publicItalics and "/me " or '').."{SPY} [".. p.Name .."]: "..msg,"All")
+                else
+                    privateProperties.Text = "{SPY} [".. p.Name .."]: "..msg
+                    StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+                end
+            end
+        end
+    end
+end
+
+for _,p in ipairs(Players:GetPlayers()) do
+    p.Chatted:Connect(function(msg) onChatted(p,msg) end)
+end
+Players.PlayerAdded:Connect(function(p)
+    p.Chatted:Connect(function(msg) onChatted(p,msg) end)
+end)
+privateProperties.Text = "{SPY "..(enabled and "EN" or "DIS").."ABLED}"
+StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+local chatFrame = player.PlayerGui.Chat.Frame
+chatFrame.ChatChannelParentFrame.Visible = true
+chatFrame.ChatBarParentFrame.Position = chatFrame.ChatChannelParentFrame.Position+UDim2.new(UDim.new(),chatFrame.ChatChannelParentFrame.Size.Y)
+notify("Chat Spying","Is up and running")
+end, {animated = true,})
+
+ChatTool:Create("Button", "Chat Disabled", function()
+game:GetService("StarterGui"):SetCoreGuiEnabled('Chat', false)
+notify("Chat","Disabled")
+end, {animated = true,})
+
+ChatTool:Create("Button", "Chat Enabled", function()
+game:GetService("StarterGui"):SetCoreGuiEnabled('Chat', true)
+notify("Chat","Enabled")
+end, {animated = true,})
+
+Settings:Create(
+    "KeyBind",
+    "Gui Visable", 
+    function()
+if game.CoreGui:FindFirstChild("UILib").Motherframe.Visible == false then
+game.CoreGui:FindFirstChild("UILib").Motherframe.Visible = true
+elseif game.CoreGui:FindFirstChild("UILib").Motherframe.Visible == true then
+game.CoreGui:FindFirstChild("UILib").Motherframe.Visible = false
+    end
+    end,
+    {
+        default = Enum.KeyCode.Q
+    }
+)
+
+Languages:Create("Button", "Finity UI", function()
+
+game.CoreGui:FindFirstChild("UILib"):Destroy()
+
+wait(1)
+ 
+local library = loadstring(game:HttpGet("https://dogix.wtf/scripts/libraries/zypher-ui-lib.lua"))()
+ 
+local main = library:CreateMain({
+    projName = "UILib",
+    Resizable = false,
+    MinSize = UDim2.new(0,400,0,400),
+    MaxSize = UDim2.new(0,750,0,500),
+})
+ 
+function notify(title, text, duration)
+    game.StarterGui:SetCore("SendNotification", {
+        Title = title; -- the title (ofc)
+        Text = text; -- what the text says (ofc)
+        Duration = duration; -- how long the notification should in secounds
+    })
+end
+
+
+
+-- Categorys
+local CreditsCategory = main:CreateCategory("Credits")
+ 
+local PlayerCategory = main:CreateCategory("Player")
+ 
+local BaseToolsCategory = main:CreateCategory("Base Tools")
+ 
+local TeleportCategory = main:CreateCategory("WayPoints")
+ 
+local ModCategory = main:CreateCategory("Mods")
+ 
+local DupeCategory = main:CreateCategory("Dupe")
+ 
+local Misc = main:CreateCategory("Misc")
+
+local v = main:CreateCategory("")
+
+local Blank = main:CreateCategory("")
+ 
+local Blank = main:CreateCategory("")
+ 
+local Blank = main:CreateCategory("")
+ 
+local SettingsCategory = main:CreateCategory("Settings")
+ 
+-- Player Sectors
+ 
+local MainScripter = CreditsCategory:CreateSection("Main Scripter - YoItsTactic#8977")
+ 
+local UILibaryDesigner = CreditsCategory:CreateSection("UI Libary Designer - xTheAlex14#3200")
+ 
+local Help = CreditsCategory:CreateSection("Helpers - Ancestor#6969, CynMod#7113, Cipher#0001")
+
+local Settings = SettingsCategory:CreateSection("Settings")
+ 
+local ChatTool = SettingsCategory:CreateSection("Chat Settings")
+
+local Languages = SettingsCategory:CreateSection("UI Libaries")
+ 
+local MiscTP = TeleportCategory:CreateSection("PlayerTP")
+ 
+local Speed = PlayerCategory:CreateSection("Humanoid")
+ 
+local ModMap = ModCategory:CreateSection("Mods")
+
+local Tps = TeleportCategory:CreateSection("Teleports")
+
+local BaseTool = BaseToolsCategory:CreateSection("Base Tools")
+ 
+local AutoBase = BaseToolsCategory:CreateSection("Auto Build")
+ 
+local AxeTools = DupeCategory:CreateSection("Axe Tools")
+
+local Misc = Misc:CreateSection("Axe Tools") 
+
+Settings:Create("Button", "Destroy Gui", function()
+game.CoreGui:FindFirstChild("UILib"):Destroy()
+end, {animated = true,})
+
+Settings:Create("Button", "Rejoin Game", function()
+game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer)
+end, {animated = true,})
+
+Settings:Create("Button", "Exit Game", function()
+game:shutdown()
+end, {animated = true,})
+
+--Humanoid
+ 
+Speed:Create("Slider", "Walk Speed", function(Value)
+_G.speed = Value
+ 
+game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = _G.speed
+game.Players.LocalPlayer.Character.Humanoid:GetPropertyChangedSignal'WalkSpeed':Connect(function()
+game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = _G.speed
+end)
+ 
+end, {min = 16 ,default = 50, max = 600, suffix = " Speed", precise = false})
+ 
+Speed:Create("Slider", "JumpPower", function(Value)
+game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = Value
+end, {min = 50,default = 50, max = 300, suffix = " Power", precise = false})
+ 
+Speed:Create("Slider", "Hip Height", function(Value)
+game:GetService("Players").LocalPlayer.Character.Humanoid.HipHeight = Value
+end, {min = 0, default = 0,max = 300, suffix = " Hieght", precise = true})
+ 
+ 
+Speed:Create("Slider", "Gravity", function(Value)
+game.Workspace.Gravity = Value
+end, {min = 0, max = 196.2, suffix = " Gravity", precise = false,default = 196.2})
+ 
+_G.jumpinf = false
+Speed:Create("Toggle", "Infinite Jump", function(State)
+_G.jumpinf = State
+end)
+
+local noclipping
+
+         function toggleNoClip()
+            local disableCollide 
+            disableCollide = game:GetService("RunService").Stepped:connect(function()
+            for i,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+               if noclipping == false then
+                  disableCollide:Disconnect()
+                  return
+               end
+               if v:IsA("BasePart") then
+                  v.CanCollide = false
+               end
+            end
+            end)
+         end
+
+--try now
+Speed:Create("Toggle", "NoClip", function(Value)
+
+   noclipping = Value
+    if noclipping == true then
+toggleNoClip()
+    end --;)
+end)
+ 
+game:GetService("UserInputService").JumpRequest:connect(function()
+if _G.jumpinf then
+game:GetService"Players".LocalPlayer.Character:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
+end
+end)
+ 
+ModMap:Create("Toggle", "WaterWalk", function(Value)
+ 
+ Workspace.Water.Water.CanCollide = Value
+ 
+end)
+ 
+ ModMap:Create("Toggle", "Remove (Water)", function(State)
+  for _,v in pairs(game.Workspace.Water:GetChildren()) do
+    if v.Name == "Water" then
+      if State then
+        v.Transparency = 1;
+      else
+        v.Transparency = 0;
+      end
+    end
+  end
+  end)
+ 
+  ModMap:Create("Toggle", "Remove (Lava)", function(State)
+  for i,v in pairs(game.Workspace.Region_Volcano:GetDescendants()) do
+    if v.Name == "TouchInterest" then
+      v:Destroy()
+    elseif v.Name == "Lava" then
+      for n,k in pairs(v:GetChildren()) do
+        if k:IsA("Part") then
+          if State == true then
+            k.Transparency = 1
+          else
+            k.Transparency = 0
+          end
+        end
+      end
+    end
+  end
+  end)
+ 
+ModMap:Create("Toggle", "Remove Fog", function(Value)
+_G.Checkbox = (Value) == true --or fasle
+                while _G.Checkbox do
+                game: service"RunService".RenderStepped:wait()
+                game.Lighting.FogEnd = 9999
+                end
+  end)
+ 
+ModMap:Create("Toggle", "Always Day", function(Value)
+  game.Lighting.TimeOfDay = "12:00:00"
+  game.Lighting.Brightness = 1
+  _G.d = Value;
+  end)
+ 
+ModMap:Create("Toggle", "Always Night", function(Value)
+  game.Lighting.TimeOfDay = "24:00:00"
+  game.Lighting.Brightness = 0
+  _G.n = Value;
+  end)
+ 
+ModMap:Create( 
+    "Slider", 
+    "Brightness",
+    function(Value)
+ game:GetService("Lighting").Brightness = Value/10
+    end,
+    {
+        min = 0,
+        max = 1000,
+        -- Optional
+        default = 0,
+        precise = false, -- ex: 0.1, 0.2, 0.3
+        changablevalue = true
+    }
+)
+ 
+ModMap:Create("Button", "Remove (Lava Boulders)", function()
+            local destroy = true
+ 
+    local boulders = workspace.Region_Volcano:FindFirstChild("PartSpawner")
+ 
+    while destroy == true do
+        for i, v in pairs(boulders:GetChildren()) do
+            v:Destroy()
+        end
+        wait(2)
+    end
+    end,
+    {animated = true,})
+ 
+ 
+ 
+    ModMap:Create("Button", "Remove (ShrineDoors)", function()
+ workspace.Region_Mountainside.BoulderRegen.Boulder:Destroy()
+    workspace.Region_Mountainside.Door.Door:Destroy()
+    end,
+    {animated = true,})
+ 
+    ModMap:Create("Button", "Remove (Snow Area Boulders)", function()
+    local boulders = workspace.Region_Snow:FindFirstChild("PartSpawner")
+ 
+            for i, v in pairs(boulders:GetChildren()) do
+            v:Destroy()
+        end
+    end,
+    {animated = true,})
+    
+    local Players = {}
+local plrs = game:GetService("Players")
+ 
+for _, v in next, plrs:GetChildren() do
+    table.insert(Players, v.Name)
+end
+ 
+plrs.PlayerRemoving:Connect(function(value)
+    for i, v in next, Players do
+        if v == value.Name then
+            table.remove(Players, i)
+        end
+    end
+end)
+ 
+plrs.PlayerAdded:Connect(function(value)
+    table.insert(Players, value.Name)
+end)
+ 
+Misc:Create("Dropdown", "Target", function(Option)
+Game_Player = Option
+end, {
+    options = Players,
+    default = Players[1]
+})
+
+ 
+    function _G.Teleport1(XP,YP,ZP)
+-- Config How Many Blocks It Will Tp You Untill The Final Destination:
+local XTpEvery = 20
+local YTpEvery = 20
+local ZTpEvery = 20
+--Time to Tp Every:
+local Timer = 0.010
+--Script:
+local pos = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+if pos.Position.X < XP then
+for x = pos.Position.X,XP,XTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(x,pos.Position.Y,pos.Position.Z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+else
+for x = pos.Position.X,XP,-XTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(x,pos.Position.Y,pos.Position.Z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+end
+if pos.Position.Z < ZP then
+for z = pos.Position.Z,ZP,ZTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(pos.Position.X,pos.Position.Y,z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+else
+for z = pos.Position.Z,ZP,-ZTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(pos.Position.X,pos.Position.Y,z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+end
+if pos.Position.Y < YP then
+for High = pos.Position.Y,YP,YTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(pos.Position.X ,High ,pos.Position.Z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+else
+for High = pos.Position.Y,YP,-YTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(pos.Position.X ,High ,pos.Position.Z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+end
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(XP,YP,ZP))
+end
+ 
+function  _G.Teleport2(cf)
+    game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame = cf
+    local BV = Instance.new("BodyVelocity")
+    BV.Parent = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    BV.MaxForce = Vector3.new(9999999999999999999999999999999999999999999, 9999999999999999999999999999999999999999999, 9999999999999999999999999999999999999999999)
+    BV.Velocity = Vector3.new(0, 100, 0)
+    wait(0.1)
+    BV.Velocity = Vector3.new(0, 10, 0)
+    wait(0.05)
+    if BV then
+        BV:Destroy()
+    end 
+end
+ 
+ 
+function _G.Teleport(cf)
+    local plrc = game:service'Players'.LocalPlayer.Character
+    plrc.Humanoid:ChangeState(5)
+    local f = Instance.new("BodyPosition", plrc.Torso)
+    f.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+    f.Position = Vector3.new(0, 500000, 0)
+    wait(.12)
+    f:Destroy()
+    wait()
+    plrc.HumanoidRootPart.CFrame = cf
+    plrc.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
+    plrc.HumanoidRootPart.RotVelocity = Vector3.new(0,0,0)
+    plrc.Humanoid:ChangeState(8)
+end
+ 
+ local Players = {}
+local plrs = game:GetService("Players")
+ 
+for _, v in next, plrs:GetChildren() do
+    table.insert(Players, v.Name)
+end
+ 
+plrs.PlayerRemoving:Connect(function(value)
+    for i, v in next, Players do
+        if v == value.Name then
+            table.remove(Players, i)
+        end
+    end
+end)
+ 
+plrs.PlayerAdded:Connect(function(value)
+    table.insert(Players, value.Name)
+end)
+ 
+MiscTP:Create("Dropdown", "Target", function(Option)
+_G.SelectedPlayer = Option
+end, {
+    options = Players,
+    default = Players[1]
+})
+ 
+MiscTP:Create("Button", "Teleport To Bases", function()
+local Base
+for i, v in pairs(game.Workspace.Properties:GetChildren()) do
+    if  v.Owner.Value ~= nil and v.Owner.Value == game.Players[_G.SelectedPlayer] then
+        Base = v.OriginSquare.CFrame + Vector3.new(0,5,0)
+    end
+end
+ 
+_G.Teleport(CFrame.new(Base.X, Base.Y, Base.Z))
+ 
+end, {animated = true,})
+ 
+MiscTP:Create("Button", "Teleport To Player", function()
+local Plr
+Plr = game.Players[_G.SelectedPlayer].Character.HumanoidRootPart.CFrame
+if Plr ~= nil then
+_G.Teleport(CFrame.new(Plr.X, Plr.Y, Plr.Z))
+end
+end, {animated = true,})
+ 
+BaseTool:Create("Button", "Freeland", function()
+for a,b in pairs(workspace.Properties:GetChildren()) do 
+    if b:FindFirstChild("Owner") and b:FindFirstChild("OriginSquare") and b.Owner.Value == nil then 
+        game.ReplicatedStorage.PropertyPurchasing.ClientPurchasedProperty:FireServer(b, b.OriginSquare.OriginCFrame.Value.p + Vector3.new(0,3,0))
+ wait(0.5)
+        Instance.new('RemoteEvent', game:service'ReplicatedStorage'.Interaction).Name = "Ban"
+    for i,v in pairs(game.Workspace.Properties:GetChildren()) do
+        if v.Owner.Value == game.Players.LocalPlayer then
+    game.Players.LocalPlayer.Character.Humanoid.Jump = true
+    wait(0.1)
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.OriginSquare.CFrame + Vector3.new(0,10,0)
+    game.Players.LocalPlayer.Character.Humanoid.Jump = true
+    wait(0.1)
+        end
+    end
+ 
+  --     game.Players.LocalPlayer.Character:MoveTo(b.OriginSquare.Position)
+        break
+    end
+end
+
+end, {animated = true,})
+ 
+BaseTool:Create("Button", "Maxland", function()
+for i, v in pairs(game:GetService("Workspace").Properties:GetChildren()) do
+        if v:FindFirstChild("Owner") and v.Owner.Value == game.Players.LocalPlayer then
+            base = v
+            square = v.OriginSquare
+            end
+        end
+    function makebase(pos)
+        local Event = game:GetService("ReplicatedStorage").PropertyPurchasing.ClientExpandedProperty
+        Event:FireServer(base, pos)
+        end
+    spos = square.Position
+    makebase(CFrame.new(spos.X + 40, spos.Y, spos.Z))
+    makebase(CFrame.new(spos.X - 40, spos.Y, spos.Z))
+    makebase(CFrame.new(spos.X, spos.Y, spos.Z + 40))
+    makebase(CFrame.new(spos.X, spos.Y, spos.Z - 40))
+    makebase(CFrame.new(spos.X + 40, spos.Y, spos.Z + 40))
+    makebase(CFrame.new(spos.X + 40, spos.Y, spos.Z - 40))
+    makebase(CFrame.new(spos.X - 40, spos.Y, spos.Z + 40))
+    makebase(CFrame.new(spos.X - 40, spos.Y, spos.Z - 40))
+    makebase(CFrame.new(spos.X + 80, spos.Y, spos.Z))
+    makebase(CFrame.new(spos.X - 80, spos.Y, spos.Z))
+    makebase(CFrame.new(spos.X, spos.Y, spos.Z + 80))
+    makebase(CFrame.new(spos.X, spos.Y, spos.Z - 80))
+--Corners--
+    makebase(CFrame.new(spos.X + 80, spos.Y, spos.Z + 80))
+    makebase(CFrame.new(spos.X + 80, spos.Y, spos.Z - 80))
+    makebase(CFrame.new(spos.X - 80, spos.Y, spos.Z + 80))
+    makebase(CFrame.new(spos.X - 80, spos.Y, spos.Z - 80))
+--Corners--
+    makebase(CFrame.new(spos.X + 40, spos.Y, spos.Z + 80))
+    makebase(CFrame.new(spos.X - 40, spos.Y, spos.Z + 80))
+    makebase(CFrame.new(spos.X + 80, spos.Y, spos.Z + 40))
+    makebase(CFrame.new(spos.X + 80, spos.Y, spos.Z - 40))
+    makebase(CFrame.new(spos.X - 80, spos.Y, spos.Z + 40))
+    makebase(CFrame.new(spos.X - 80, spos.Y, spos.Z - 40))
+    makebase(CFrame.new(spos.X + 40, spos.Y, spos.Z - 80))
+    makebase(CFrame.new(spos.X - 40, spos.Y, spos.Z - 80))
+
+end, {animated = true,})
+ 
+BaseTool:Create("Button", "Blue Prints", function()
+for i,v in pairs(game.ReplicatedStorage.Purchasables.Structures.BlueprintStructures:GetChildren()) do
+if not game.Players.LocalPlayer.PlayerBlueprints.Blueprints:FindFirstChild(v.Name) then
+local clone = v:Clone()
+clone.Parent = game.Players.LocalPlayer.PlayerBlueprints.Blueprints
+end
+end
+
+end, {animated = true,})
+ 
+  Settings:Create("Slider", "Max Zoom Distance", function(Value)
+  game.Players.LocalPlayer.CameraMaxZoomDistance = Value
+ 
+ 
+end, {min = 60, max = 10000, suffix = "Zoom", precise = false,default = 60})
+ 
+
+ 
+local TEHEHHEHEHE = {}
+
+function DupeAxes()
+    GetLastPos()
+    if game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool") then
+        game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool").Parent = game.Players.LocalPlayer.Backpack
+    end
+    Head = game.Players.LocalPlayer.Character.Head.CFrame
+    for i, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+        if v:IsA("Part") then
+            v:Destroy()
+        end
+    end
+    wait()
+    for i, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+        if v:IsA("Tool") then
+            game.ReplicatedStorage.Interaction.ClientInteracted:FireServer(v, "Drop tool", Head)
+      TEHEHHEHEHE[#TEHEHHEHEHE] = v
+        end
+    end
+    wait(6.3)
+    Tp_1(CFrame.new(Pos))
+  
+  for i, v in pairs(TEHEHHEHEHE) do
+   game.ReplicatedStorage.Interaction.ClientInteracted:FireServer(v, "Pick up tool")
+  end
+  
+  
+end
+
+AxeTools:Create("Button", "Dupe Axes", function()
+DupeAxes()
+    end, {animated = true,})
+ 
+ AxeTools:Create("Button", "Save Axes", function()
+    Amount = 0
+    for a,b in pairs(game.Players.LocalPlayer.Backpack:GetChildren())do
+        if b.Name ~= "BlueprintTool" and b.Name == "Tool" then
+            b.Parent = game.Players.LocalPlayer
+            Amount = Amount + 1
+        end
+    end
+
+ 
+end, {animated = true,})
+ 
+AxeTools:Create("Button", "Restore Axes", function()
+    Amount = 0
+    for a,b in pairs(game.Players.LocalPlayer:GetChildren()) do
+        if b.Name ~= "BlueprintTool" and b.Name == "Tool" then
+            b.Parent = game.Players.LocalPlayer.Backpack
+            Amount = Amount + 1
+        end
+    end
+
+ 
+end, {animated = true,})
+ 
+AxeTools:Create("Button", "Drop Axes", function()
+    Amount = 0
+    for a,b in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+        if b.Name ~= "BlueprintTool" and b.Name == "Tool" then
+            game.ReplicatedStorage.Interaction.ClientInteracted:FireServer(b, "Drop tool", game.Players.LocalPlayer.Character.Head.CFrame)
+            Amount = Amount + 1
+        end
+    end
+
+end, {animated = true,})
+
+ 
+
+ 
+    AxeTools:Create("Button", "Solo Dupe", function()
+    
+    local Manager = game:GetService("VirtualInputManager")
+
+    game.ReplicatedStorage.Interaction.ClientSetListPlayer:InvokeServer(game:GetService'Players'.LocalPlayer.WhitelistFolder, game.Players.LocalPlayer, true)
+    
+    local Player = game.Players.LocalPlayer
+    
+        local LoadSlot = game.ReplicatedStorage.LoadSaveRequests.ClientMayLoad:InvokeServer(Player)
+         if LoadSlot then
+            game.ReplicatedStorage.LoadSaveRequests.RequestLoad:InvokeServer(game.Players.LocalPlayer.CurrentSaveSlot.Value, Player)
+            game.ReplicatedStorage.Interaction.ClientSetListPlayer:InvokeServer(game:GetService'Players'.LocalPlayer.WhitelistFolder, game.Players.LocalPlayer, false)
+            game:GetService("Players").LocalPlayer.PlayerGui.Chat.Frame.Visible = false
+repeat
+    wait(0.1)
+until game:GetService("Players").LocalPlayer.PlayerGui.PropertyPurchasingGUI.SelectPurchase.Visible == true
+wait(.2)
+Manager:SendKeyEvent(true,"E",false,game)
+repeat
+    wait(0.1)
+until game:GetService("Players").LocalPlayer.PlayerGui.PropertyPurchasingGUI.ConfirmPurchase.Visible == true
+wait(1.2)
+Manager:SendKeyEvent(true,"E",false,game)
+wait(2.5)
+game:GetService("Players").LocalPlayer.PlayerGui.Chat.Frame.Visible = true
+         else
+            print("Load Is On a Cooldown")
+         end
+    
+    end, {animated = true,})
+
+Tps:Create(
+    "DropDown",
+    "Shops", 
+    function(current)
+ 
+if current == "Wood R Us" then
+_G.Teleport(CFrame.new(268.4, 3.2, 52.1))
+end
+ 
+if current == "Fancy Furnishings" then
+_G.Teleport(CFrame.new(491, 13, -1720))
+end
+ 
+if current == "Links Logic" then
+_G.Teleport(CFrame.new(4607, 9, -798))
+end
+ 
+if current == "Car Shop" then
+_G.Teleport(CFrame.new(508.5, 3.2, -1462.7))
+end
+ 
+if current == "Fine Arts Shop" then
+_G.Teleport(CFrame.new(5207, -156, 719))
+end
+ 
+if current == "Bobs Shack" then
+_G.Teleport(CFrame.new(260, 10, -2542))
+end
+ 
+ 
+ 
+    end,
+    {
+        options = {
+            "Wood R Us",
+            "Fancy Furnishings",
+            "Links Logic",
+            "Car Shop",
+            "Fine Arts Shop",
+            "Bobs Shack"
+        },
+         -- Optional
+        default = "Shops",
+        search = false
+    }
+)
+ 
+Tps:Create(
+    "DropDown",
+    "Wood Areas", 
+    function(current)
+ 
+if current == "Palm Area" then
+_G.Teleport(CFrame.new(2549, -5, -42))
+end
+ 
+if current == "Swamp Area" then
+_G.Teleport(CFrame.new(-1209, 132, -801))
+end
+ 
+if current == "Volcano Area" then
+_G.Teleport(CFrame.new(-1585, 622, 1140))
+end
+ 
+if current == "Frost Area" then
+_G.Teleport(CFrame.new(1448.3, 413, 3185.2))
+end
+ 
+if current == "SnowGlow Area" then
+_G.Teleport(CFrame.new(-1105.9, -6, -894))
+end
+ 
+if current == "Koa Area" then
+_G.Teleport(CFrame.new(5022.4, 6.1, -503.1))
+end
+ 
+if current == "CaveCrawler Area" then
+_G.Teleport(CFrame.new(3488.1, -199.8, 519.1))
+end
+ 
+if current == "Pine & Fir Area" then
+_G.Teleport(CFrame.new(1284.9, 59.8, 2136.1))
+end
+ 
+if current == "Walnut Area" then
+_G.Teleport(CFrame.new(-282.3, 8, -1555.8))
+end
+ 
+if current == "Birch Area" then
+_G.Teleport(CFrame.new(-395.5, 244.8, 1275.4))
+end
+ 
+if current == "Cherry Area" then
+_G.Teleport(CFrame.new(220.9, 59.8, 1305.8))
+end
+ 
+    end,
+    {
+        options = {
+            "Palm Area",
+            "Swamp Area",
+            "Volcano Area",
+            "Frost Area",
+            "SnowGlow Area",
+            "Koa Area",
+            "CaveCrawler Area",
+            "Pine & Fir Area",
+            "Walnut Area",
+            "Birch Area",
+            "Cherry Area"
+        },
+         -- Optional
+        default = "Wood Areas",
+        search = false
+    }
+)
+ 
+Tps:Create(
+    "DropDown",
+    "Land Marks", 
+    function(current)
+ 
+if current == "The Den" then
+_G.Teleport(CFrame.new(323, 49, 1930))
+end
+ 
+if current == "Shrine Of Sight" then
+_G.Teleport(CFrame.new(-1600, 205, 919))
+end
+ 
+if current == "Ski Lodge" then
+_G.Teleport(CFrame.new(1244, 66, 2306))
+end
+ 
+if current == "Dock" then
+_G.Teleport(CFrame.new(1114, 3.2, -197))
+end
+ 
+if current == "Bridge" then
+_G.Teleport(CFrame.new(113, 15, -977))
+end
+ 
+if current == "Stranger" then
+_G.Teleport(CFrame.new(1061, 20, 1131))
+end
+ 
+if current == "Green Box" then
+_G.Teleport(CFrame.new(-1675, 358, 1476))
+end
+ 
+if current == "Light House" then
+_G.Teleport(CFrame.new(1464.8, 356.3, 3257.2))
+end
+ 
+    end,
+    {
+        options = {
+            "The Den",
+            "Shrine Of Sight",
+            "Ski Lodge",
+            "Dock",
+            "Stranger",
+            "Green Box",
+            "Light House",
+        },
+         -- Optional
+        default = "Land Marks",
+        search = false
+    }
+)
+ 
+
+ 
+ local Players = {}
+local plrs = game:GetService("Players")
+ 
+for _, v in next, plrs:GetChildren() do
+    table.insert(Players, v.Name)
+end
+ 
+plrs.PlayerRemoving:Connect(function(value)
+    for i, v in next, Players do
+        if v == value.Name then
+            table.remove(Players, i)
+        end
+    end
+end)
+ 
+plrs.PlayerAdded:Connect(function(value)
+    table.insert(Players, value.Name)
+end)
+ 
+AutoBase:Create("Dropdown", "Target", function(Option)
+_G.SelectedPlayer = Option
+end, {
+    options = Players,
+    default = Players[1]
+})
+ 
+AutoBase:Create("Button", "Advanced Wall", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Advanced%20Wall%204%20Tall"))()
+ 
+end, {animated = true,})
+ 
+AutoBase:Create("Button", "Big Castle", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Big%20Castle"))()
+ 
+end, {animated = true,})
+
+AutoBase:Create("Button", "Bob's Shack", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Bobs%20Shack"))()
+ 
+end, {animated = true,})
+
+AutoBase:Create("Button", "Dome", function()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Dome"))()
+
+end, {animated = true,})
+
+AutoBase:Create("Button", "Ferrari", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Ferrari"))()
+ 
+end, {animated = true,})
+
+ 
+AutoBase:Create("Button", "Ferry", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Ferry"))()
+ 
+end, {animated = true,})
+
+AutoBase:Create("Button", "FlatStar", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Flat%20Star"))()
+ 
+end, {animated = true,})
+
+AutoBase:Create("Button", "Floor", function()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Floor"))()
+
+end, {animated = true,})
+
+AutoBase:Create("Button", "Hanger", function()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Hanger"))()
+
+end, {animated = true,})
+
+AutoBase:Create("Button", "Maze Castle", function()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/MazeCastle"))()
+
+end, {animated = true,})
+
+AutoBase:Create("Button", "Pig", function()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Pig"))()
+
+end, {animated = true,})
+
+AutoBase:Create("Button", "Plane", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Plane"))()
+ 
+end, {animated = true,})
+
+AutoBase:Create("Button", "Present", function()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Present"))()
+
+end, {animated = true,})
+ 
+AutoBase:Create("Button", "Pyramid", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Pyramid"))()
+ 
+end, {animated = true,})
+
+AutoBase:Create("Button", "Rock Wall", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Rock%20Wall"))()
+ 
+end, {animated = true,})
+
+--Me ethier
+Tps:Create("Button", "Click Tp Tool", function()
+    local tool = Instance.new("Tool")
+    tool.Name = "Tp Tool"
+    tool.RequiresHandle = false
+    tool.CanBeDropped = false
+    tool.Parent = game.Players.LocalPlayer.Backpack
+    tool.Equipped:Connect(function(mouse)
+    mouse.Button1Down:connect(function()
+    if mouse.Target and mouse.Target.Parent then
+        Tp_1(CFrame.new(mouse.Hit.Position.X, mouse.Hit.Position.Y + 3.2, mouse.Hit.Position.Z))
+    end
+    end)
+    end)
+end, {animated = true,})
+ 
+ 
+BaseTool:Create("Button", "GreyWood", function()
+local Player = "LocalPlayer"
+
+local Remote = game.ReplicatedStorage.PlaceStructure.ClientPlacedStructure
+local Plr = game:GetService("Players").LocalPlayer
+local Check = true
+
+local BpRecive = { [1] = "Wall2Tall", [2] = "Door1", [3] = "Floor2", [4] = "Floor1Small", [5] = "Post", [6] = "Wedge10", [7] = "Wall3Tall", [8] = "Wall1Tall", [9] = "Wall1", [10] = "Wall1Short", [11] = "Wall2", [12] = "Wall2Short", [13] = "Wall1TallCorner", [14] = "Wall1Corner", [15] = "Wall1ShortCorner", [16] = "Wall1Thin", [17] = "Wall1TallThin", [18] = "Wall1ShortThin", [19] = "Wall2TallThin", [20] = "Wall2Thin", [21] = "Wall2ShortThin", [22] = "Wall2TallCorner", [23] = "Wall2Corner", [24] = "Wall2ShortCorner", [25] = "Wall3Thin", [26] = "Wall3TallThin", [27] = "Wall3Corner", [28] = "Wall3TallCorner", [29] = "Floor1Large", [30] = "Floor1", [31] = "Floor2Large", [32] = "Floor2Small", [33] = "Stair1", [34] = "Stair2", [35] = "Wedge1_Thin", [36] = "Wedge9_Thin", [37] = "Wedge4_Thin", [38] = "Wedge7_Thin", [39] = "Chair1", [40] = "Table1", [41] = "Table2", [42] = "Ladder1", [43] = "Cabinet1Thin", [44] = "Cabinet1", [45] = "Cabinet1CornerTight", [46] = "Cabinet1CornerWide", [47] = "CounterTop1Thin", [48] = "CounterTop1", [49] = "CounterTop1Sink", [50] = "Floor2Tiny", [51] = "Floor1Tiny", [52] = "Wedge1", [53] = "Wedge2", [54] = "Wedge3", [55] = "Wedge4", [56] = "Wedge8", [57] = "Wedge7", [58] = "Wedge6", [59] = "Wedge2_Thin", [60] = "Wedge3_Thin", [61] = "Wedge10_Thin", [62] = "Wedge9", [63] = "Wedge6_Thin", [64] = "Wedge8_Thin", [65] = "Wedge5", [66] = "Wedge5_Thin", [67] = "Wall3", [68] = "Door2", [69] = "Door3" }
+
+local function Gray()
+    local ItsCFrame
+    local Remote = game.ReplicatedStorage.PlaceStructure.ClientPlacedStructure
+    for i,v in pairs(game.Workspace.PlayerModels:GetChildren()) do
+        if v:FindFirstChild("Owner") and v.Owner.Value == game.Players[Player] then
+            if v:FindFirstChild("Type") and v.Type.Value == "Blueprint" then
+                if v ~= nil then
+                    Remote:FireServer(v.ItemName.Value, v.PrimaryPart.CFrame, game.Players.LocalPlayer, nil, v, true)
+                end
+            end
+        end
+    end
+end
+
+game.Workspace.PlayerModels.ChildAdded:connect(function(v)
+    if v:WaitForChild("Owner", 5) and v:WaitForChild("ItemName", 5) and Check then
+        Remote:FireServer(v.ItemName.Value, v.PrimaryPart.CFrame, game.Players.LocalPlayer, nil, v, true)
+    end
+end)
+
+local Base
+for i, v in pairs(game.Workspace.Properties:GetChildren()) do
+    if v.Owner.Value == game.Players[Player] then
+        Base = v.OriginSquare.CFrame
+    end
+end
+
+local Count = 0
+local Gr = 0
+function Sbp(A_1, A_2, A_3, A_4, A_5, A_6, A_7)
+    game.ReplicatedStorage.PlaceStructure.ClientPlacedBlueprint:FireServer(BpRecive[A_1], Base* CFrame.Angles(A_2, A_3, A_4) + Vector3.new(A_5, A_6, A_7), Plr)
+    wait()
+    if Count > 16 then Count = 0 wait(0.1) else Count = Count + 1 end
+    if Gr > 50 then Gr = 0 Gray() else Gr = Gr + 1 end
+end
+
+end, {animated = true,})
+ 
+BaseTool:Create("Button", "Clear Entire Base", function()
+for i,v in pairs(game.Workspace.PlayerModels:GetChildren()) do
+if v:FindFirstChild("Owner") and v:FindFirstChild("Type") and v.Owner.Value == game.Players.LocalPlayer then
+local A_1 = v
+local Event = game:GetService("ReplicatedStorage").Interaction.DestroyStructure
+Event:FireServer(A_1)
+end
+end
+end, {animated = true,})
+
+BaseTool:Create("Button", "Clear Structures", function()
+for i,v in pairs(game.Workspace.PlayerModels:GetChildren()) do
+if v:FindFirstChild("Owner") and v:FindFirstChild("Type") and v.Owner.Value == game.Players.LocalPlayer then
+    if v.Type.Value == "Structure" or v.Type.Value == "Furniture" then
+local A_1 = v
+local Event = game:GetService("ReplicatedStorage").Interaction.DestroyStructure
+Event:FireServer(A_1)
+end
+end
+end
+end, {animated = true,})
+
+game:GetService("StarterGui"):SetCore("SendNotification", {
+  Title = "Tactical Gui",
+  Text = "Loaded Successful."
+})
+ 
+local players = game:GetService('Players')
+if game.Players.LocalPlayer then 
+game.StarterGui:SetCore('SendNotification', {
+    Title = ' '.. players.LocalPlayer.Name..'!',
+    Text = 'Welcome to Tactical GUI!',
+    Icon = [[http://www.roblox.com/Thumbs/Avatar.ashx?x=100&y=100&Format=Png&userName=]]..players.LocalPlayer.Name..[[&RAND]] .. math.random(1,10000000),
+    Duration = 5,
+   })
+  end
+
+-- Kick
+
+function Tp_1(CFrame)
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame
+end
+
+function GetLastPos()
+    Pos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+end
+
+function AxeKick(player)
+        GetLastPos() 
+        local plr = game.Players.LocalPlayer
+        local char = plr.Character
+        local plr2 = game.Players[Game_Player]
+        local char2 = plr2.Character
+        
+        local Tehe = char.Humanoid
+        Instance.new("Humanoid").Parent = char
+        Tehe:Destroy()
+        
+        local Tool = char:FindFirstChild("Tool") or plr.Backpack:FindFirstChild("Tool")
+        Tool.Parent = char
+        if Tool:FindFirstChild("Owner") then
+            Tool.Owner:Destroy()
+        end
+        
+        Tp_1(char2.HumanoidRootPart.CFrame)
+        wait(0.1)
+        repeat
+            game:GetService("RunService").Stepped:Wait()
+            char.HumanoidRootPart.CFrame = plr2.Character.HumanoidRootPart.CFrame
+        until Tool.Parent == char2
+        wait(6.4)
+        Tp_1(CFrame.new(Pos))
+end
+
+
+Misc:Create(
+    "Button",
+    "Kick",
+    function()
+AxeKick(Game_Player)
+    end,
+    {
+        animated = true,
+    }
+)
+
+ChatTool:Create("Button", "Chat Spy", function()
+enabled = true
+spyOnMyself = false
+public = false
+publicItalics = true
+privateProperties = {
+    Color = Color3.fromRGB(0,255,255); 
+    Font = Enum.Font.SourceSansBold;
+    TextSize = 18;
+}
+--////////////////////////////////////////////////////////////////
+local StarterGui = game:GetService("StarterGui")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local saymsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("SayMessageRequest")
+local getmsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("OnMessageDoneFiltering")
+local instance = (_G.chatSpyInstance or 0) + 1
+_G.chatSpyInstance = instance
+
+local function onChatted(p,msg)
+    if _G.chatSpyInstance == instance then
+        if p==player and msg:lower():sub(1,4)=="/spy" then
+            enabled = not enabled
+            wait(0.3)
+            privateProperties.Text = "{SPY "..(enabled and "EN" or "DIS").."ABLED}"
+            StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+        elseif enabled and (spyOnMyself==true or p~=player) then
+            msg = msg:gsub("[\n\r]",''):gsub("\t",' '):gsub("[ ]+",' ')
+            local hidden = true
+            local conn = getmsg.OnClientEvent:Connect(function(packet,channel)
+                if packet.SpeakerUserId==p.UserId and packet.Message==msg:sub(#msg-#packet.Message+1) and (channel=="All" or (channel=="Team" and public==false and Players[packet.FromSpeaker].Team==player.Team)) then
+                    hidden = false
+                end
+            end)
+            wait(1)
+            conn:Disconnect()
+            if hidden and enabled then
+                if public then
+                    saymsg:FireServer((publicItalics and "/me " or '').."{SPY} [".. p.Name .."]: "..msg,"All")
+                else
+                    privateProperties.Text = "{SPY} [".. p.Name .."]: "..msg
+                    StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+                end
+            end
+        end
+    end
+end
+
+for _,p in ipairs(Players:GetPlayers()) do
+    p.Chatted:Connect(function(msg) onChatted(p,msg) end)
+end
+Players.PlayerAdded:Connect(function(p)
+    p.Chatted:Connect(function(msg) onChatted(p,msg) end)
+end)
+privateProperties.Text = "{SPY "..(enabled and "EN" or "DIS").."ABLED}"
+StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+local chatFrame = player.PlayerGui.Chat.Frame
+chatFrame.ChatChannelParentFrame.Visible = true
+chatFrame.ChatBarParentFrame.Position = chatFrame.ChatChannelParentFrame.Position+UDim2.new(UDim.new(),chatFrame.ChatChannelParentFrame.Size.Y)
+notify("Chat Spying","Is up and running")
+end, {animated = true,})
+
+ChatTool:Create("Button", "Chat Disabled", function()
+game:GetService("StarterGui"):SetCoreGuiEnabled('Chat', false)
+notify("Chat","Disabled")
+end, {animated = true,})
+
+ChatTool:Create("Button", "Chat Enabled", function()
+game:GetService("StarterGui"):SetCoreGuiEnabled('Chat', true)
+notify("Chat","Enabled")
+end, {animated = true,})
+
+Settings:Create(
+    "KeyBind",
+    "Gui Visable", 
+    function()
+if game.CoreGui:FindFirstChild("UILib").Motherframe.Visible == false then
+game.CoreGui:FindFirstChild("UILib").Motherframe.Visible = true
+elseif game.CoreGui:FindFirstChild("UILib").Motherframe.Visible == true then
+game.CoreGui:FindFirstChild("UILib").Motherframe.Visible = false
+    end
+    end,
+    {
+        default = Enum.KeyCode.Q
+    }
+)
+
+Languages:Create("Button", "Finity UI", function()
+
+game.CoreGui:FindFirstChild("UILib"):Destroy()
+
+wait(1)
+ 
+local Finity = loadstring(game:HttpGet("https://pastebin.com/raw/VVTCXaqX"))()
+
+
+local DZC = Finity.new(true,"Tactical Gui",UDim2.new(0, 600, 0, 350))
+DZC.ChangeToggleKey(Enum.KeyCode.Q)
+ 
+function notify(title, text, duration)
+    game.StarterGui:SetCore("SendNotification", {
+        Title = title; -- the title (ofc)
+        Text = text; -- what the text says (ofc)
+        Duration = duration; -- how long the notification should in secounds
+    })
+end
+
+
+
+-- Categorys
+local CreditsCategory = DZC:Category("Credits")
+ 
+local PlayerCategory = DZC:Category("Player")
+ 
+local BaseToolsCategory = DZC:Category("Base Tools")
+ 
+local TeleportCategory = DZC:Category("WayPoints")
+ 
+local ModCategory = DZC:Category("Mods")
+ 
+local DupeCategory = DZC:Category("Dupe")
+ 
+local Misc = DZC:Category("Misc")
+
+local v = DZC:Category("")
+
+local Blank = DZC:Category("")
+ 
+local Blank = DZC:Category("")
+ 
+local Blank = DZC:Category("")
+ 
+local SettingsCategory = DZC:Category("Settings")
+ 
+-- Player Sectors
+ 
+local MainScripter = CreditsCategory:Sector("Main Scripter - YoItsTactic#8977")
+ 
+local UILibaryDesigner = CreditsCategory:Sector("UI Libary Designer - deto#1153")
+ 
+local Help = CreditsCategory:Sector("Helpers - Ancestor#6969, CynMod#7113, Cipher#0001")
+
+local Settings = SettingsCategory:Sector("Settings")
+ 
+local ChatTool = SettingsCategory:Sector("Chat Settings")
+
+local Languages = SettingsCategory:Sector("UI Libaries")
+ 
+local MiscTP = TeleportCategory:Sector("PlayerTP")
+ 
+local Speed = PlayerCategory:Sector("Humanoid")
+ 
+local ModMap = ModCategory:Sector("Mods")
+
+local Tps = TeleportCategory:Sector("Teleports")
+
+local BaseTool = BaseToolsCategory:Sector("Base Tools")
+ 
+local AutoBase = BaseToolsCategory:Sector("Auto Build")
+ 
+local AxeTools = DupeCategory:Sector("Axe Tools")
+
+local Misc = Misc:Sector("Axe Tools") 
+
+Settings:Cheat("Button", "Destroy Gui", function()
+game:GetService("CoreGui").FinityUI:Destroy()
+end, {text = "Destroy Gui"})
+
+Settings:Cheat("Button", "Rejoin Game", function()
+game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer)
+end, {text = "Rejoin Game"})
+
+Settings:Cheat("Button", "Exit Game", function()
+game:shutdown()
+end, {text = "Exit Game"})
+
+--Humanoid
+
+ 
+Speed:Cheat("Slider", "Walk Speed", function(Value)
+_G.speed = Value
+ 
+game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = _G.speed
+game.Players.LocalPlayer.Character.Humanoid:GetPropertyChangedSignal'WalkSpeed':Connect(function()
+game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = _G.speed
+end)
+ 
+end, {min = 16 ,default = 50, max = 600, suffix = " Speed", precise = false})
+ 
+Speed:Cheat("Slider", "JumpPower", function(Value)
+game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = Value
+end, {min = 50,default = 50, max = 300, suffix = " Power", precise = false})
+ 
+Speed:Cheat("Slider", "Hip Height", function(Value)
+game:GetService("Players").LocalPlayer.Character.Humanoid.HipHeight = Value
+end, {min = 0, default = 0,max = 300, suffix = " Hieght", precise = true})
+ 
+ 
+Speed:Cheat("Slider", "Gravity", function(Value)
+game.Workspace.Gravity = Value
+end, {min = 0, max = 196.2, suffix = " Gravity", precise = false,default = 196.2})
+ 
+_G.jumpinf = false
+Speed:Cheat("Checkbox", "Infinite Jump", function(State)
+_G.jumpinf = State
+end)
+
+local noclipping
+
+         function toggleNoClip()
+            local disableCollide 
+            disableCollide = game:GetService("RunService").Stepped:connect(function()
+            for i,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+               if noclipping == false then
+                  disableCollide:Disconnect()
+                  return
+               end
+               if v:IsA("BasePart") then
+                  v.CanCollide = false
+               end
+            end
+            end)
+         end
+
+--try now
+Speed:Cheat("Checkbox", "NoClip", function(Value)
+
+   noclipping = Value
+    if noclipping == true then
+toggleNoClip()
+    end --;)
+end)
+ 
+game:GetService("UserInputService").JumpRequest:connect(function()
+if _G.jumpinf then
+game:GetService"Players".LocalPlayer.Character:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
+end
+end)
+ 
+ModMap:Cheat("Checkbox", "WaterWalk", function(Value)
+ 
+ Workspace.Water.Water.CanCollide = Value
+ 
+end)
+ 
+ ModMap:Cheat("Checkbox", "Remove (Water)", function(State)
+  for _,v in pairs(game.Workspace.Water:GetChildren()) do
+    if v.Name == "Water" then
+      if State then
+        v.Transparency = 1;
+      else
+        v.Transparency = 0;
+      end
+    end
+  end
+  end)
+ 
+  ModMap:Cheat("Checkbox", "Remove (Lava)", function(State)
+  for i,v in pairs(game.Workspace.Region_Volcano:GetDescendants()) do
+    if v.Name == "TouchInterest" then
+      v:Destroy()
+    elseif v.Name == "Lava" then
+      for n,k in pairs(v:GetChildren()) do
+        if k:IsA("Part") then
+          if State == true then
+            k.Transparency = 1
+          else
+            k.Transparency = 0
+          end
+        end
+      end
+    end
+  end
+  end)
+ 
+ModMap:Cheat("Checkbox", "Remove Fog", function(Value)
+_G.Checkbox = (Value) == true --or fasle
+                while _G.Checkbox do
+                game: service"RunService".RenderStepped:wait()
+                game.Lighting.FogEnd = 9999
+                end
+  end)
+ 
+ModMap:Cheat("Checkbox", "Always Day", function(Value)
+  game.Lighting.TimeOfDay = "12:00:00"
+  game.Lighting.Brightness = 1
+  _G.d = Value;
+  end)
+ 
+ModMap:Cheat("Checkbox", "Always Night", function(Value)
+  game.Lighting.TimeOfDay = "24:00:00"
+  game.Lighting.Brightness = 0
+  _G.n = Value;
+  end)
+ 
+ModMap:Cheat( 
+    "Slider", 
+    "Brightness",
+    function(Value)
+ game:GetService("Lighting").Brightness = Value/10
+    end,
+    {
+        min = 0,
+        max = 1000,
+        -- Optional
+        default = 0,
+        precise = false, -- ex: 0.1, 0.2, 0.3
+        changablevalue = true
+    }
+)
+ 
+ModMap:Cheat("Button", "Remove (Lava Boulders)", function()
+            local destroy = true
+ 
+    local boulders = workspace.Region_Volcano:FindFirstChild("PartSpawner")
+ 
+    while destroy == true do
+        for i, v in pairs(boulders:GetChildren()) do
+            v:Destroy()
+        end
+        wait(2)
+    end
+    end,
+    {text = "Remove (Lava Boulders)",})
+ 
+ 
+ 
+    ModMap:Cheat("Button", "Remove (ShrineDoors)", function()
+ workspace.Region_Mountainside.BoulderRegen.Boulder:Destroy()
+    workspace.Region_Mountainside.Door.Door:Destroy()
+    end,
+    {text = "Remove (ShrineDoors)",})
+ 
+    ModMap:Cheat("Button", "Remove (Snow Area Boulders)", function()
+    local boulders = workspace.Region_Snow:FindFirstChild("PartSpawner")
+ 
+            for i, v in pairs(boulders:GetChildren()) do
+            v:Destroy()
+        end
+    end,
+    {text = "Remove (Snow Area Boulders)",})
+    
+    local Players = {}
+local plrs = game:GetService("Players")
+ 
+for _, v in next, plrs:GetChildren() do
+    table.insert(Players, v.Name)
+end
+ 
+plrs.PlayerRemoving:Connect(function(value)
+    for i, v in next, Players do
+        if v == value.Name then
+            table.remove(Players, i)
+        end
+    end
+end)
+ 
+plrs.PlayerAdded:Connect(function(value)
+    table.insert(Players, value.Name)
+end)
+ 
+Misc:Cheat("Dropdown", "Target", function(Option)
+Game_Player = Option
+end, {
+    options = Players,
+    default = Players[1]
+})
+
+ 
+    function _G.Teleport1(XP,YP,ZP)
+-- Config How Many Blocks It Will Tp You Untill The Final Destination:
+local XTpEvery = 20
+local YTpEvery = 20
+local ZTpEvery = 20
+--Time to Tp Every:
+local Timer = 0.010
+--Script:
+local pos = game:GetService('Players').LocalPlayer.Character.HumanoidRootPart
+if pos.Position.X < XP then
+for x = pos.Position.X,XP,XTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(x,pos.Position.Y,pos.Position.Z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+else
+for x = pos.Position.X,XP,-XTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(x,pos.Position.Y,pos.Position.Z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+end
+if pos.Position.Z < ZP then
+for z = pos.Position.Z,ZP,ZTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(pos.Position.X,pos.Position.Y,z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+else
+for z = pos.Position.Z,ZP,-ZTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(pos.Position.X,pos.Position.Y,z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+end
+if pos.Position.Y < YP then
+for High = pos.Position.Y,YP,YTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(pos.Position.X ,High ,pos.Position.Z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+else
+for High = pos.Position.Y,YP,-YTpEvery do
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(pos.Position.X ,High ,pos.Position.Z))
+local part = Instance.new("Part", workspace)
+part.Anchored = true
+part.Size = Vector3.new(10,0.1,10)
+part.Material = "Glass"
+part.BrickColor = BrickColor.Random()
+part.Transparency = 1
+part.Position = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0,-3.05,0)
+wait(Timer)
+part.Destroy(part)
+end
+end
+game.Players.LocalPlayer.Character:MoveTo(Vector3.new(XP,YP,ZP))
+end
+ 
+function  _G.Teleport2(cf)
+    game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").CFrame = cf
+    local BV = Instance.new("BodyVelocity")
+    BV.Parent = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+    BV.MaxForce = Vector3.new(9999999999999999999999999999999999999999999, 9999999999999999999999999999999999999999999, 9999999999999999999999999999999999999999999)
+    BV.Velocity = Vector3.new(0, 100, 0)
+    wait(0.1)
+    BV.Velocity = Vector3.new(0, 10, 0)
+    wait(0.05)
+    if BV then
+        BV:Destroy()
+    end 
+end
+ 
+ 
+function _G.Teleport(cf)
+    local plrc = game:service'Players'.LocalPlayer.Character
+    plrc.Humanoid:ChangeState(5)
+    local f = Instance.new("BodyPosition", plrc.Torso)
+    f.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+    f.Position = Vector3.new(0, 500000, 0)
+    wait(.12)
+    f:Destroy()
+    wait()
+    plrc.HumanoidRootPart.CFrame = cf
+    plrc.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
+    plrc.HumanoidRootPart.RotVelocity = Vector3.new(0,0,0)
+    plrc.Humanoid:ChangeState(8)
+end
+ 
+ local Players = {}
+local plrs = game:GetService("Players")
+ 
+for _, v in next, plrs:GetChildren() do
+    table.insert(Players, v.Name)
+end
+ 
+plrs.PlayerRemoving:Connect(function(value)
+    for i, v in next, Players do
+        if v == value.Name then
+            table.remove(Players, i)
+        end
+    end
+end)
+ 
+plrs.PlayerAdded:Connect(function(value)
+    table.insert(Players, value.Name)
+end)
+ 
+MiscTP:Cheat("Dropdown", "Target", function(Option)
+_G.SelectedPlayer = Option
+end, {
+    options = Players,
+    default = Players[1]
+})
+ 
+MiscTP:Cheat("Button", "Teleport To Bases", function()
+local Base
+for i, v in pairs(game.Workspace.Properties:GetChildren()) do
+    if  v.Owner.Value ~= nil and v.Owner.Value == game.Players[_G.SelectedPlayer] then
+        Base = v.OriginSquare.CFrame + Vector3.new(0,5,0)
+    end
+end
+ 
+_G.Teleport(CFrame.new(Base.X, Base.Y, Base.Z))
+ 
+end, {text = "Teleport To Base"})
+ 
+MiscTP:Cheat("Button", "Teleport To Player", function()
+local Plr
+Plr = game.Players[_G.SelectedPlayer].Character.HumanoidRootPart.CFrame
+if Plr ~= nil then
+_G.Teleport(CFrame.new(Plr.X, Plr.Y, Plr.Z))
+end
+end, {text = "Teleport To Player"})
+ 
+BaseTool:Cheat("Button", "Freeland", function()
+for a,b in pairs(workspace.Properties:GetChildren()) do 
+    if b:FindFirstChild("Owner") and b:FindFirstChild("OriginSquare") and b.Owner.Value == nil then 
+        game.ReplicatedStorage.PropertyPurchasing.ClientPurchasedProperty:FireServer(b, b.OriginSquare.OriginCFrame.Value.p + Vector3.new(0,3,0))
+ wait(0.5)
+        Instance.new('RemoteEvent', game:service'ReplicatedStorage'.Interaction).Name = "Ban"
+    for i,v in pairs(game.Workspace.Properties:GetChildren()) do
+        if v.Owner.Value == game.Players.LocalPlayer then
+    game.Players.LocalPlayer.Character.Humanoid.Jump = true
+    wait(0.1)
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.OriginSquare.CFrame + Vector3.new(0,10,0)
+    game.Players.LocalPlayer.Character.Humanoid.Jump = true
+    wait(0.1)
+        end
+    end
+ 
+  --     game.Players.LocalPlayer.Character:MoveTo(b.OriginSquare.Position)
+        break
+    end
+end
+
+end, {text = "Free Land"})
+ 
+BaseTool:Cheat("Button", "Maxland", function()
+for i, v in pairs(game:GetService("Workspace").Properties:GetChildren()) do
+        if v:FindFirstChild("Owner") and v.Owner.Value == game.Players.LocalPlayer then
+            base = v
+            square = v.OriginSquare
+            end
+        end
+    function makebase(pos)
+        local Event = game:GetService("ReplicatedStorage").PropertyPurchasing.ClientExpandedProperty
+        Event:FireServer(base, pos)
+        end
+    spos = square.Position
+    makebase(CFrame.new(spos.X + 40, spos.Y, spos.Z))
+    makebase(CFrame.new(spos.X - 40, spos.Y, spos.Z))
+    makebase(CFrame.new(spos.X, spos.Y, spos.Z + 40))
+    makebase(CFrame.new(spos.X, spos.Y, spos.Z - 40))
+    makebase(CFrame.new(spos.X + 40, spos.Y, spos.Z + 40))
+    makebase(CFrame.new(spos.X + 40, spos.Y, spos.Z - 40))
+    makebase(CFrame.new(spos.X - 40, spos.Y, spos.Z + 40))
+    makebase(CFrame.new(spos.X - 40, spos.Y, spos.Z - 40))
+    makebase(CFrame.new(spos.X + 80, spos.Y, spos.Z))
+    makebase(CFrame.new(spos.X - 80, spos.Y, spos.Z))
+    makebase(CFrame.new(spos.X, spos.Y, spos.Z + 80))
+    makebase(CFrame.new(spos.X, spos.Y, spos.Z - 80))
+--Corners--
+    makebase(CFrame.new(spos.X + 80, spos.Y, spos.Z + 80))
+    makebase(CFrame.new(spos.X + 80, spos.Y, spos.Z - 80))
+    makebase(CFrame.new(spos.X - 80, spos.Y, spos.Z + 80))
+    makebase(CFrame.new(spos.X - 80, spos.Y, spos.Z - 80))
+--Corners--
+    makebase(CFrame.new(spos.X + 40, spos.Y, spos.Z + 80))
+    makebase(CFrame.new(spos.X - 40, spos.Y, spos.Z + 80))
+    makebase(CFrame.new(spos.X + 80, spos.Y, spos.Z + 40))
+    makebase(CFrame.new(spos.X + 80, spos.Y, spos.Z - 40))
+    makebase(CFrame.new(spos.X - 80, spos.Y, spos.Z + 40))
+    makebase(CFrame.new(spos.X - 80, spos.Y, spos.Z - 40))
+    makebase(CFrame.new(spos.X + 40, spos.Y, spos.Z - 80))
+    makebase(CFrame.new(spos.X - 40, spos.Y, spos.Z - 80))
+
+end, {text = "Max Land"})
+ 
+BaseTool:Cheat("Button", "Blue Prints", function()
+for i,v in pairs(game.ReplicatedStorage.Purchasables.Structures.BlueprintStructures:GetChildren()) do
+if not game.Players.LocalPlayer.PlayerBlueprints.Blueprints:FindFirstChild(v.Name) then
+local clone = v:Clone()
+clone.Parent = game.Players.LocalPlayer.PlayerBlueprints.Blueprints
+end
+end
+
+end, {text = "Get Blue Prints"})
+ 
+  Settings:Cheat("Slider", "Max Zoom Distance", function(Value)
+  game.Players.LocalPlayer.CameraMaxZoomDistance = Value
+ 
+ 
+end, {min = 60, max = 10000, suffix = "Zoom", precise = false,default = 60})
+ 
+
+ 
+local TEHEHHEHEHE = {}
+
+function DupeAxes()
+    GetLastPos()
+    if game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool") then
+        game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool").Parent = game.Players.LocalPlayer.Backpack
+    end
+    Head = game.Players.LocalPlayer.Character.Head.CFrame
+    for i, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+        if v:IsA("Part") then
+            v:Destroy()
+        end
+    end
+    wait()
+    for i, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+        if v:IsA("Tool") then
+            game.ReplicatedStorage.Interaction.ClientInteracted:FireServer(v, "Drop tool", Head)
+      TEHEHHEHEHE[#TEHEHHEHEHE] = v
+        end
+    end
+    wait(6.3)
+    Tp_1(CFrame.new(Pos))
+  
+  for i, v in pairs(TEHEHHEHEHE) do
+   game.ReplicatedStorage.Interaction.ClientInteracted:FireServer(v, "Pick up tool")
+  end
+  
+  
+end
+
+AxeTools:Cheat("Button", "Dupe Axes", function()
+DupeAxes()
+    end, {text = "Dupe Axes"})
+ 
+ AxeTools:Cheat("Button", "Save Axes", function()
+    Amount = 0
+    for a,b in pairs(game.Players.LocalPlayer.Backpack:GetChildren())do
+        if b.Name ~= "BlueprintTool" and b.Name == "Tool" then
+            b.Parent = game.Players.LocalPlayer
+            Amount = Amount + 1
+        end
+    end
+
+ 
+end, {text = "Save Axes"})
+ 
+AxeTools:Cheat("Button", "Restore Axes", function()
+    Amount = 0
+    for a,b in pairs(game.Players.LocalPlayer:GetChildren()) do
+        if b.Name ~= "BlueprintTool" and b.Name == "Tool" then
+            b.Parent = game.Players.LocalPlayer.Backpack
+            Amount = Amount + 1
+        end
+    end
+
+ 
+end, {text = "Restore Axes"})
+ 
+AxeTools:Cheat("Button", "Drop Axes", function()
+    Amount = 0
+    for a,b in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+        if b.Name ~= "BlueprintTool" and b.Name == "Tool" then
+            game.ReplicatedStorage.Interaction.ClientInteracted:FireServer(b, "Drop tool", game.Players.LocalPlayer.Character.Head.CFrame)
+            Amount = Amount + 1
+        end
+    end
+
+end, {text = "Drop Axes"})
+
+ 
+
+ 
+    AxeTools:Cheat("Button", "Solo Dupe", function()
+    
+    local Manager = game:GetService("VirtualInputManager")
+
+    game.ReplicatedStorage.Interaction.ClientSetListPlayer:InvokeServer(game:GetService'Players'.LocalPlayer.WhitelistFolder, game.Players.LocalPlayer, true)
+    
+    local Player = game.Players.LocalPlayer
+    
+        local LoadSlot = game.ReplicatedStorage.LoadSaveRequests.ClientMayLoad:InvokeServer(Player)
+         if LoadSlot then
+            game.ReplicatedStorage.LoadSaveRequests.RequestLoad:InvokeServer(game.Players.LocalPlayer.CurrentSaveSlot.Value, Player)
+            game.ReplicatedStorage.Interaction.ClientSetListPlayer:InvokeServer(game:GetService'Players'.LocalPlayer.WhitelistFolder, game.Players.LocalPlayer, false)
+            game:GetService("Players").LocalPlayer.PlayerGui.Chat.Frame.Visible = false
+repeat
+    wait(0.1)
+until game:GetService("Players").LocalPlayer.PlayerGui.PropertyPurchasingGUI.SelectPurchase.Visible == true
+wait(.2)
+Manager:SendKeyEvent(true,"E",false,game)
+repeat
+    wait(0.1)
+until game:GetService("Players").LocalPlayer.PlayerGui.PropertyPurchasingGUI.ConfirmPurchase.Visible == true
+wait(1.2)
+Manager:SendKeyEvent(true,"E",false,game)
+wait(2.5)
+game:GetService("Players").LocalPlayer.PlayerGui.Chat.Frame.Visible = true
+         else
+            print("Load Is On a Cooldown")
+         end
+    
+    end, {text = "Solo Dupe"})
+
+Tps:Cheat(
+    "DropDown",
+    "Shops", 
+    function(current)
+ 
+if current == "Wood R Us" then
+_G.Teleport(CFrame.new(268.4, 3.2, 52.1))
+end
+ 
+if current == "Fancy Furnishings" then
+_G.Teleport(CFrame.new(491, 13, -1720))
+end
+ 
+if current == "Links Logic" then
+_G.Teleport(CFrame.new(4607, 9, -798))
+end
+ 
+if current == "Car Shop" then
+_G.Teleport(CFrame.new(508.5, 3.2, -1462.7))
+end
+ 
+if current == "Fine Arts Shop" then
+_G.Teleport(CFrame.new(5207, -156, 719))
+end
+ 
+if current == "Bobs Shack" then
+_G.Teleport(CFrame.new(260, 10, -2542))
+end
+ 
+ 
+ 
+    end,
+    {
+        options = {
+            "Wood R Us",
+            "Fancy Furnishings",
+            "Links Logic",
+            "Car Shop",
+            "Fine Arts Shop",
+            "Bobs Shack"
+        },
+         -- Optional
+        default = "Shops",
+        search = false
+    }
+)
+ 
+Tps:Cheat(
+    "DropDown",
+    "Wood Areas", 
+    function(current)
+ 
+if current == "Palm Area" then
+_G.Teleport(CFrame.new(2549, -5, -42))
+end
+ 
+if current == "Swamp Area" then
+_G.Teleport(CFrame.new(-1209, 132, -801))
+end
+ 
+if current == "Volcano Area" then
+_G.Teleport(CFrame.new(-1585, 622, 1140))
+end
+ 
+if current == "Frost Area" then
+_G.Teleport(CFrame.new(1448.3, 413, 3185.2))
+end
+ 
+if current == "SnowGlow Area" then
+_G.Teleport(CFrame.new(-1105.9, -6, -894))
+end
+ 
+if current == "Koa Area" then
+_G.Teleport(CFrame.new(5022.4, 6.1, -503.1))
+end
+ 
+if current == "CaveCrawler Area" then
+_G.Teleport(CFrame.new(3488.1, -199.8, 519.1))
+end
+ 
+if current == "Pine & Fir Area" then
+_G.Teleport(CFrame.new(1284.9, 59.8, 2136.1))
+end
+ 
+if current == "Walnut Area" then
+_G.Teleport(CFrame.new(-282.3, 8, -1555.8))
+end
+ 
+if current == "Birch Area" then
+_G.Teleport(CFrame.new(-395.5, 244.8, 1275.4))
+end
+ 
+if current == "Cherry Area" then
+_G.Teleport(CFrame.new(220.9, 59.8, 1305.8))
+end
+ 
+    end,
+    {
+        options = {
+            "Palm Area",
+            "Swamp Area",
+            "Volcano Area",
+            "Frost Area",
+            "SnowGlow Area",
+            "Koa Area",
+            "CaveCrawler Area",
+            "Pine & Fir Area",
+            "Walnut Area",
+            "Birch Area",
+            "Cherry Area"
+        },
+         -- Optional
+        default = "Wood Areas",
+        search = false
+    }
+)
+ 
+Tps:Cheat(
+    "DropDown",
+    "Land Marks", 
+    function(current)
+ 
+if current == "The Den" then
+_G.Teleport(CFrame.new(323, 49, 1930))
+end
+ 
+if current == "Shrine Of Sight" then
+_G.Teleport(CFrame.new(-1600, 205, 919))
+end
+ 
+if current == "Ski Lodge" then
+_G.Teleport(CFrame.new(1244, 66, 2306))
+end
+ 
+if current == "Dock" then
+_G.Teleport(CFrame.new(1114, 3.2, -197))
+end
+ 
+if current == "Bridge" then
+_G.Teleport(CFrame.new(113, 15, -977))
+end
+ 
+if current == "Stranger" then
+_G.Teleport(CFrame.new(1061, 20, 1131))
+end
+ 
+if current == "Green Box" then
+_G.Teleport(CFrame.new(-1675, 358, 1476))
+end
+ 
+if current == "Light House" then
+_G.Teleport(CFrame.new(1464.8, 356.3, 3257.2))
+end
+ 
+    end,
+    {
+        options = {
+            "The Den",
+            "Shrine Of Sight",
+            "Ski Lodge",
+            "Dock",
+            "Stranger",
+            "Green Box",
+            "Light House",
+        },
+         -- Optional
+        default = "Land Marks",
+        search = false
+    }
+)
+ 
+
+ 
+ local Players = {}
+local plrs = game:GetService("Players")
+ 
+for _, v in next, plrs:GetChildren() do
+    table.insert(Players, v.Name)
+end
+ 
+plrs.PlayerRemoving:Connect(function(value)
+    for i, v in next, Players do
+        if v == value.Name then
+            table.remove(Players, i)
+        end
+    end
+end)
+ 
+plrs.PlayerAdded:Connect(function(value)
+    table.insert(Players, value.Name)
+end)
+ 
+AutoBase:Cheat("Dropdown", "Target", function(Option)
+_G.SelectedPlayer = Option
+end, {
+    options = Players,
+    default = Players[1]
+})
+ 
+AutoBase:Cheat("Button", "Advanced Wall", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Advanced%20Wall%204%20Tall"))()
+ 
+end, {text = "Build"})
+ 
+AutoBase:Cheat("Button", "Big Castle", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Big%20Castle"))()
+ 
+end, {text = "Build"})
+
+AutoBase:Cheat("Button", "Bob's Shack", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Bobs%20Shack"))()
+ 
+end, {text = "Build"})
+
+AutoBase:Cheat("Button", "Dome", function()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Dome"))()
+
+end, {text = "Build"})
+
+AutoBase:Cheat("Button", "Ferrari", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Ferrari"))()
+ 
+end, {text = "Build"})
+ 
+AutoBase:Cheat("Button", "Ferry", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Ferry"))()
+ 
+end, {text = "Build"})
+
+AutoBase:Cheat("Button", "FlatStar", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Flat%20Star"))()
+ 
+end, {text = "Build"})
+
+AutoBase:Cheat("Button", "Floor", function()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Floor"))()
+
+end, {text = "Build"})
+
+AutoBase:Cheat("Button", "Hanger", function()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Hanger"))()
+
+end, {text = "Build"})
+
+AutoBase:Cheat("Button", "Maze Castle", function()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/MazeCastle"))()
+
+end, {text = "Build"})
+
+AutoBase:Cheat("Button", "Pig", function()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Pig"))()
+
+end, {text = "Build"})
+
+AutoBase:Cheat("Button", "Plane", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Plane"))()
+ 
+end, {text = "Build"})
+
+AutoBase:Cheat("Button", "Present", function()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Present"))()
+
+end, {text = "Build"})
+ 
+AutoBase:Cheat("Button", "Pyramid", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Pyramid"))()
+ 
+end, {text = "Build"})
+
+AutoBase:Cheat("Button", "Rock Wall", function()
+ 
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/lt3/main/TacticalGui/Rock%20Wall"))()
+ 
+end, {text = "Build"})
+
+--Me ethier
+Tps:Cheat("Button", "Click Tp Tool", function()
+    local tool = Instance.new("Tool")
+    tool.Name = "Tp Tool"
+    tool.RequiresHandle = false
+    tool.CanBeDropped = false
+    tool.Parent = game.Players.LocalPlayer.Backpack
+    tool.Equipped:Connect(function(mouse)
+    mouse.Button1Down:connect(function()
+    if mouse.Target and mouse.Target.Parent then
+        Tp_1(CFrame.new(mouse.Hit.Position.X, mouse.Hit.Position.Y + 3.2, mouse.Hit.Position.Z))
+    end
+    end)
+    end)
+end, {text = "Click Tp Tool"})
+ 
+ 
+BaseTool:Cheat("Button", "GreyWood", function()
+local Player = "LocalPlayer"
+
+local Remote = game.ReplicatedStorage.PlaceStructure.ClientPlacedStructure
+local Plr = game:GetService("Players").LocalPlayer
+local Check = true
+
+local BpRecive = { [1] = "Wall2Tall", [2] = "Door1", [3] = "Floor2", [4] = "Floor1Small", [5] = "Post", [6] = "Wedge10", [7] = "Wall3Tall", [8] = "Wall1Tall", [9] = "Wall1", [10] = "Wall1Short", [11] = "Wall2", [12] = "Wall2Short", [13] = "Wall1TallCorner", [14] = "Wall1Corner", [15] = "Wall1ShortCorner", [16] = "Wall1Thin", [17] = "Wall1TallThin", [18] = "Wall1ShortThin", [19] = "Wall2TallThin", [20] = "Wall2Thin", [21] = "Wall2ShortThin", [22] = "Wall2TallCorner", [23] = "Wall2Corner", [24] = "Wall2ShortCorner", [25] = "Wall3Thin", [26] = "Wall3TallThin", [27] = "Wall3Corner", [28] = "Wall3TallCorner", [29] = "Floor1Large", [30] = "Floor1", [31] = "Floor2Large", [32] = "Floor2Small", [33] = "Stair1", [34] = "Stair2", [35] = "Wedge1_Thin", [36] = "Wedge9_Thin", [37] = "Wedge4_Thin", [38] = "Wedge7_Thin", [39] = "Chair1", [40] = "Table1", [41] = "Table2", [42] = "Ladder1", [43] = "Cabinet1Thin", [44] = "Cabinet1", [45] = "Cabinet1CornerTight", [46] = "Cabinet1CornerWide", [47] = "CounterTop1Thin", [48] = "CounterTop1", [49] = "CounterTop1Sink", [50] = "Floor2Tiny", [51] = "Floor1Tiny", [52] = "Wedge1", [53] = "Wedge2", [54] = "Wedge3", [55] = "Wedge4", [56] = "Wedge8", [57] = "Wedge7", [58] = "Wedge6", [59] = "Wedge2_Thin", [60] = "Wedge3_Thin", [61] = "Wedge10_Thin", [62] = "Wedge9", [63] = "Wedge6_Thin", [64] = "Wedge8_Thin", [65] = "Wedge5", [66] = "Wedge5_Thin", [67] = "Wall3", [68] = "Door2", [69] = "Door3" }
+
+local function Gray()
+    local ItsCFrame
+    local Remote = game.ReplicatedStorage.PlaceStructure.ClientPlacedStructure
+    for i,v in pairs(game.Workspace.PlayerModels:GetChildren()) do
+        if v:FindFirstChild("Owner") and v.Owner.Value == game.Players[Player] then
+            if v:FindFirstChild("Type") and v.Type.Value == "Blueprint" then
+                if v ~= nil then
+                    Remote:FireServer(v.ItemName.Value, v.PrimaryPart.CFrame, game.Players.LocalPlayer, nil, v, true)
+                end
+            end
+        end
+    end
+end
+
+game.Workspace.PlayerModels.ChildAdded:connect(function(v)
+    if v:WaitForChild("Owner", 5) and v:WaitForChild("ItemName", 5) and Check then
+        Remote:FireServer(v.ItemName.Value, v.PrimaryPart.CFrame, game.Players.LocalPlayer, nil, v, true)
+    end
+end)
+
+local Base
+for i, v in pairs(game.Workspace.Properties:GetChildren()) do
+    if v.Owner.Value == game.Players[Player] then
+        Base = v.OriginSquare.CFrame
+    end
+end
+
+local Count = 0
+local Gr = 0
+function Sbp(A_1, A_2, A_3, A_4, A_5, A_6, A_7)
+    game.ReplicatedStorage.PlaceStructure.ClientPlacedBlueprint:FireServer(BpRecive[A_1], Base* CFrame.Angles(A_2, A_3, A_4) + Vector3.new(A_5, A_6, A_7), Plr)
+    wait()
+    if Count > 16 then Count = 0 wait(0.1) else Count = Count + 1 end
+    if Gr > 50 then Gr = 0 Gray() else Gr = Gr + 1 end
+end
+
+end, {text = "Gray Wood"})
+ 
+BaseTool:Cheat("Button", "Clear Entire Base", function()
+for i,v in pairs(game.Workspace.PlayerModels:GetChildren()) do
+if v:FindFirstChild("Owner") and v:FindFirstChild("Type") and v.Owner.Value == game.Players.LocalPlayer then
+local A_1 = v
+local Event = game:GetService("ReplicatedStorage").Interaction.DestroyStructure
+Event:FireServer(A_1)
+end
+end
+end, {text = "Clear Entire Base"})
+
+BaseTool:Cheat("Button", "Clear Structures", function()
+for i,v in pairs(game.Workspace.PlayerModels:GetChildren()) do
+if v:FindFirstChild("Owner") and v:FindFirstChild("Type") and v.Owner.Value == game.Players.LocalPlayer then
+    if v.Type.Value == "Structure" or v.Type.Value == "Furniture" then
+local A_1 = v
+local Event = game:GetService("ReplicatedStorage").Interaction.DestroyStructure
+Event:FireServer(A_1)
+end
+end
+end
+end, {text = "Clear Structures"})
+
+-- Kick
+
+function Tp_1(CFrame)
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame
+end
+
+function GetLastPos()
+    Pos = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+end
+
+function AxeKick(player)
+        GetLastPos() 
+        local plr = game.Players.LocalPlayer
+        local char = plr.Character
+        local plr2 = game.Players[Game_Player]
+        local char2 = plr2.Character
+        
+        local Tehe = char.Humanoid
+        Instance.new("Humanoid").Parent = char
+        Tehe:Destroy()
+        
+        local Tool = char:FindFirstChild("Tool") or plr.Backpack:FindFirstChild("Tool")
+        Tool.Parent = char
+        if Tool:FindFirstChild("Owner") then
+            Tool.Owner:Destroy()
+        end
+        
+        Tp_1(char2.HumanoidRootPart.CFrame)
+        wait(0.1)
+        repeat
+            game:GetService("RunService").Stepped:Wait()
+            char.HumanoidRootPart.CFrame = plr2.Character.HumanoidRootPart.CFrame
+        until Tool.Parent == char2
+        wait(6.4)
+        Tp_1(CFrame.new(Pos))
+end
+
+
+Misc:Cheat(
+    "Button",
+    "Kick",
+    function()
+AxeKick(Game_Player)
+end, {text = "Kick Player"})
+
+ChatTool:Cheat("Button", "Chat Spy", function()
+enabled = true
+spyOnMyself = false
+public = false
+publicItalics = true
+privateProperties = {
+    Color = Color3.fromRGB(0,255,255); 
+    Font = Enum.Font.SourceSansBold;
+    TextSize = 18;
+}
+--////////////////////////////////////////////////////////////////
+local StarterGui = game:GetService("StarterGui")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local saymsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("SayMessageRequest")
+local getmsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("OnMessageDoneFiltering")
+local instance = (_G.chatSpyInstance or 0) + 1
+_G.chatSpyInstance = instance
+
+local function onChatted(p,msg)
+    if _G.chatSpyInstance == instance then
+        if p==player and msg:lower():sub(1,4)=="/spy" then
+            enabled = not enabled
+            wait(0.3)
+            privateProperties.Text = "{SPY "..(enabled and "EN" or "DIS").."ABLED}"
+            StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+        elseif enabled and (spyOnMyself==true or p~=player) then
+            msg = msg:gsub("[\n\r]",''):gsub("\t",' '):gsub("[ ]+",' ')
+            local hidden = true
+            local conn = getmsg.OnClientEvent:Connect(function(packet,channel)
+                if packet.SpeakerUserId==p.UserId and packet.Message==msg:sub(#msg-#packet.Message+1) and (channel=="All" or (channel=="Team" and public==false and Players[packet.FromSpeaker].Team==player.Team)) then
+                    hidden = false
+                end
+            end)
+            wait(1)
+            conn:Disconnect()
+            if hidden and enabled then
+                if public then
+                    saymsg:FireServer((publicItalics and "/me " or '').."{SPY} [".. p.Name .."]: "..msg,"All")
+                else
+                    privateProperties.Text = "{SPY} [".. p.Name .."]: "..msg
+                    StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+                end
+            end
+        end
+    end
+end
+
+for _,p in ipairs(Players:GetPlayers()) do
+    p.Chatted:Connect(function(msg) onChatted(p,msg) end)
+end
+Players.PlayerAdded:Connect(function(p)
+    p.Chatted:Connect(function(msg) onChatted(p,msg) end)
+end)
+privateProperties.Text = "{SPY "..(enabled and "EN" or "DIS").."ABLED}"
+StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+local chatFrame = player.PlayerGui.Chat.Frame
+chatFrame.ChatChannelParentFrame.Visible = true
+chatFrame.ChatBarParentFrame.Position = chatFrame.ChatChannelParentFrame.Position+UDim2.new(UDim.new(),chatFrame.ChatChannelParentFrame.Size.Y)
+notify("Chat Spying","Is up and running")
+end, {text = "Chat Spy"})
+
+ChatTool:Cheat("Button", "Chat Disabled", function()
+game:GetService("StarterGui"):SetCoreGuiEnabled('Chat', false)
+notify("Chat","Disabled")
+end, {text = "Chat Disabled"})
+
+ChatTool:Cheat("Button", "Chat Enabled", function()
+game:GetService("StarterGui"):SetCoreGuiEnabled('Chat', true)
+notify("Chat","Enabled")
+end, {text = "Chat Enabled"})
+
+Languages:Cheat("Button", "Zypher UI", function()
+ 
+game:GetService("CoreGui").FinityUI:Destroy()
+
+wait(1)
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/Tactical-Guii/main/Tactic"))()
+ 
+end, {text = "Zypher UI"})
+
+  game.Lighting.Changed:connect(function()
+  if _G.d then
+    game.Lighting.TimeOfDay = "12:00:00"
+    game.Lighting.Brightness = 1
+  end
+  if _G.n then
+    game.Lighting.TimeOfDay = "24:00:00"
+    game.Lighting.Brightness = 0
+  end
+  if _G.rf then
+    game.Lighting.FogEnd = 9999
+
+  end
+  end)
+
+end, {animated = true,})
+
+  game.Lighting.Changed:connect(function()
+  if _G.d then
+    game.Lighting.TimeOfDay = "12:00:00"
+    game.Lighting.Brightness = 1
+  end
+  if _G.n then
+    game.Lighting.TimeOfDay = "24:00:00"
+    game.Lighting.Brightness = 0
+  end
+  if _G.rf then
+    game.Lighting.FogEnd = 9999
+
+  end
+  end)
+
+end, {animated = true,})
+
+  game.Lighting.Changed:connect(function()
+  if _G.d then
+    game.Lighting.TimeOfDay = "12:00:00"
+    game.Lighting.Brightness = 1
+  end
+  if _G.n then
+    game.Lighting.TimeOfDay = "24:00:00"
+    game.Lighting.Brightness = 0
+  end
+  if _G.rf then
+    game.Lighting.FogEnd = 9999
+
+  end
+  end)
