@@ -69,7 +69,7 @@ local function SRCHZ_fake_script() -- Confirm.LocalScript
         else
             Key.Enabled = false 
         end
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/Tactical-Guii/main/Tactic", true))()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/yoitstactic/Tactical-Guii/main/Synapse%20Tactic", true))()
         end)
     end
 
