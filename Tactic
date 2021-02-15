@@ -63,7 +63,7 @@ local function SRCHZ_fake_script() -- Confirm.LocalScript
     local script = Instance.new('LocalScript', Confirm)
 
     script.Parent.MouseButton1Click:Connect(function()
-        if Input.Text ~= "Bacon" then
+        if Input.Text ~= "uE8f9dje9aUShD7" then
             wait(3)
             game.Players.LocalPlayer:Kick("Incorrect key, please get the new one from the discord server")
         else
